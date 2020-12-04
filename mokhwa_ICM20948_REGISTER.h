@@ -53,7 +53,7 @@
 
 #define B0_TEMP_OUT_H					0x39		// Temp Sensor Data
 #define B0_TEMP_OUT_L					0x3A
-#define 
+
 #define B0_EXT_SLV_SENS_DATA_00			0x3B		//Sensor Data read from external I2C devices via I2C master interface
 #define B0_EXT_SLV_SENS_DATA_01			0x3C
 #define B0_EXT_SLV_SENS_DATA_02			0x3D

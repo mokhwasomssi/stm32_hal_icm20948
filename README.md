@@ -5,8 +5,8 @@ contents will be added...
 ## SPI with ICM-20948 (Gyroscope and Accelerometer)
 
 ### 1. SPI Mode : MODE 3 
-### 2. Data Format  
-Register Address + Register Value
+### 2. Data Format   
+
 - SPI Address format / Read (1), Write(0)
 
 MSB| | | | | | |LSB| 

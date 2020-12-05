@@ -8,7 +8,8 @@ contents will be added...
 ### 2. Data Format  
 Register Address + Register Value
 - Read Register  
-|txts|
+|MSB|   |   |   |   |   |   |LSB|  
+| 1 | A6| 
 
 
 - Write Register

@@ -7,13 +7,16 @@ contents will be added...
 ### 1. SPI Mode : MODE 3 
 ### 2. Data Format  
 Register Address + Register Value
-- Read Register  
+- SPI Address format / Read (1), Write(0)
 
-|제목|내용|설명|내용|설명|내용|설명|내용|설명|내용|설명|내용|  
-|:---:|:---:|:----:|:---:|:---:|:---:|:---:|:---:|  
-|테스트1|테스트2|테스트3||테스트1|테스트2|테스트3|테스트2|테스트3|  
+MSB| | | | | | |LSB| 
+:----:|----|----|----|----|----|----|----|
+R/W|A6|A5|A4|A3|A2|A1|A0|  
 
+- SPI Data format
 
-- Write Register
+MSB| | | | | | |LSB| 
+:----:|----|----|----|----|----|----|----|
+D7|D6|D5|D4|D3|D2|D1|D0|
 
 ## I2C with AK09916 (Magnetometer)

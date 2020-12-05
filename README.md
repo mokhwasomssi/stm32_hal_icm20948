@@ -8,9 +8,12 @@ contents will be added...
 ### 2. Data Format  
 Register Address + Register Value
 - Read Register  
-|MSB|   |   |   |   |   |   |LSB|  
-| 1 | A6| 
 
+|제목|내용|설명|
+|------|---|---|
+|테스트1|테스트2|테스트3|
+|테스트1|테스트2|테스트3|
+|테스트1|테스트2|테스트3|
 
 - Write Register
 

@@ -17,6 +17,11 @@ CS  - PB12
 #define CS_PIN_NUMBER		GPIO_PIN_12
 ```  
 #### STM32CubeMX  
+##### Setting  
+```
+Project Manager -> Code Generator -> Generated files 
+-> Generate peripheral initialization as a pair of '.c/.h'files per peripheral
+``` 
 ##### SPI2
 ```
 Mode : Full-Duplex Master  

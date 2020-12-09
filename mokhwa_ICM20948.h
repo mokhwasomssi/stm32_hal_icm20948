@@ -17,11 +17,11 @@
 #include "spi.h"
 
 
-
 /* User Configuration */
-#define SPI_ICM20948 		(&hspi2)			// SPI Name
+#define SPI_ICM20948 		(&hspi2)			// SPI Number
 #define CS_PIN_PORT			GPIOB				// CS Pin
 #define CS_PIN_NUMBER		GPIO_PIN_12
+/* User Configuration */
 
 
 /* ICM20948 Data Structure */
@@ -40,6 +40,8 @@ typedef struct _ICM20948_DATA
 	int16_t Mag_Z_Data;
 
 } ICM20948_DATA;
+/* ICM20948 Data Structure */
+
 
 /* typedef */
 typedef enum _UserBank
@@ -50,8 +52,19 @@ typedef enum _UserBank
 	UserBank_3
 } UserBank;
 
-typedef uint16_t Gyro_ODR;
-typedef uint16_t Accel_ODR;
+typedef enum _GyroOutDataRate
+{
+	Gyro_ODR_1100Hz = 0,
+	Gyro_ODR_100Hz = 10,
+	Gyro_ODR_10Hz = 109
+} Gyro_ODR;
+
+typedef enum _AccelOutDataRate
+{
+	Accel_ODR_1100Hz = 0,
+	Accel_ODR_100Hz = 10,
+	Accel_ODR_10Hz = 109
+} Accel_ODR;
 
 typedef enum _GyroFullScaleSellet
 {
@@ -68,6 +81,7 @@ typedef enum _AccelFullScaleSellet
 	Accel_Scale_8g = 5,
 	Accel_Scale_16g = 7
 } Accel_Scale;
+/* typedef */
 
 
 /* functions */
@@ -83,36 +97,7 @@ void INIT_ICM20948(Gyro_ODR godr, Accel_ODR aodr, Gyro_Scale gs, Accel_Scale as)
 
 void READ_GYRO(ICM20948_DATA* myData);
 void READ_ACCEL(ICM20948_DATA* myData);
+/* functions */
 
 
 #endif	// __MOKHWA_ICM20948_H__
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -11,11 +11,10 @@
 #include "mokhwa_ICM20948_REGISTER.h"
 #include "mokhwa_ICM20948.h"
 
-
 uint8_t TX_Buffer[6] = {0};
 uint8_t RX_Buffer[6] = {0};
 
-/* FUNCTIONS */
+/* functions */
 void CS_HIGH()		// Change The State of CS
 {
 	HAL_GPIO_WritePin(CS_PIN_PORT, CS_PIN_NUMBER, SET);
@@ -70,10 +69,8 @@ void INIT_ICM20948(Gyro_ODR godr, Accel_ODR aodr, Gyro_Scale gs, Accel_Scale as)
 
 	// Set Output Data Rate
 	SELECT_USER_BANK(UserBank_2);
-	uint8_t GYRO_SMPLRT_DIV_Value = 1100/godr - 1;		// Output Data Rate = 1.1kHz / (1 + GYRO_SMPLRT_DIV)
-	uint8_t ACCEL_SMPLRT_DIV_2_Value = 1125/aodr - 1;	// Output Data Rate = 1.125kHz / (1 + ACCEL_SMPLRT_DIV)
-	WRITE_REGISTER(B2_GYRO_SMPLRT_DIV, GYRO_SMPLRT_DIV_Value);
-	WRITE_REGISTER(B2_ACCEL_SMPLRT_DIV_2, ACCEL_SMPLRT_DIV_2_Value);
+	WRITE_REGISTER(B2_GYRO_SMPLRT_DIV, godr);		// Output Data Rate = 1.1kHz / (1 + GYRO_SMPLRT_DIV)
+	WRITE_REGISTER(B2_ACCEL_SMPLRT_DIV_2, aodr);	// Output Data Rate = 1.1kHz / (1 + ACCEL_SMPLRT_DIV)
 
 	// Set Gyro and Accel Scale
 	SELECT_USER_BANK(UserBank_2);
@@ -100,17 +97,4 @@ void READ_ACCEL(ICM20948_DATA* myData)
 	myData->Accel_Y_Data = (int16_t)(RX_Buffer[2] << 8 | RX_Buffer[3]);
 	myData->Accel_Z_Data = (int16_t)(RX_Buffer[4] << 8 | RX_Buffer[5]);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/* functions */

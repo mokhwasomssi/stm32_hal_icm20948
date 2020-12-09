@@ -11,6 +11,8 @@
 #ifndef __MOKHWA_ICM20948_REGISTER__
 #define __MOKHWA_ICM20948_REGISTER__
 
+#define ICM20948						0xEA
+
 // Register Map for Gyroscope and Accelerometer
 // Divided into USER BANK 0, USER BANK 1, USER BANK 2, USER BANK 3 
 

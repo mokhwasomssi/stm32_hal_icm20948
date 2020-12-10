@@ -10,7 +10,7 @@ Sensor : SparkFun 9Dof IMU Breakout - ICM-20948 (Qwiic) (https://www.sparkfun.co
 ### 1. User Configuration  
 SPI - SPI2  
 CS  - PB12  
-#### mokhwa_ICM20948.h
+#### ICM20948.h
 ```
 #define SPI_ICM20948 		(&hspi2)	  	  	// SPI Number
 #define CS_PIN_PORT             GPIOB			      	// CS Pin

@@ -1,4 +1,4 @@
-# SIMPLE_ICM20948_LIB
+# Simple ICM20948 Library
 Very Simple ICM-20948 library (STM32 HAL)  
 I'm still working on it...
 

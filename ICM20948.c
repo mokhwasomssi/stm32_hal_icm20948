@@ -43,7 +43,7 @@ void WRITE_REGISTER(uint8_t RegisterAddress, uint8_t WriteData)
 
 	TX_Buffer[0] = 0x00 | RegisterAddress;
 	TX_Buffer[1] = WriteData;
-	HAL_SPI_Transmit(&hspi2, TX_Buffer, 2, 10);
+	HAL_SPI_Transmit(SPI_ICM20948, TX_Buffer, 2, 10);
 
 	CS_HIGH();
 }
@@ -61,6 +61,7 @@ void SELECT_USER_BANK(UserBank UB)						// Select Bank Before Access the Registe
 	WRITE_REGISTER(B0_REG_BANK_SEL, UB);
 }
 
+/* Initialize ICM-20948(Gyroscope, accelerometer) */
 void INIT_ICM20948(Gyro_ODR godr, Accel_ODR aodr, Gyro_Scale gs, Accel_Scale as)
 {
 	// Wake the Chip from Sleep Mode
@@ -76,6 +77,19 @@ void INIT_ICM20948(Gyro_ODR godr, Accel_ODR aodr, Gyro_Scale gs, Accel_Scale as)
 	SELECT_USER_BANK(UserBank_2);
 	WRITE_REGISTER(B2_GYRO_CONFIG_1, gs | 0x01);			// 0x01 is Enable Gyro and Accel DLPF (reset value)
 	WRITE_REGISTER(B2_ACCEL_CONFIG, as | 0x01);
+}
+
+/* Initialize AK09916(Magnetometer) */
+void INIT_AK09916()
+{
+	SELECT_USER_BANK(UsarBank_0);
+	WRITE_REGISTER(B0_USER_CTRL, I2C_MST_EN);
+
+	SELECT_USER_BANK(UserBank_3);
+	WRITE_REGISTER(B3_I2C_SLV0_CTRL, I2C_SLV_EN | I2C_SLV_LENG_6bytes);
+
+
+
 }
 
 void READ_GYRO(ICM20948_DATA* myData)
@@ -97,4 +111,29 @@ void READ_ACCEL(ICM20948_DATA* myData)
 	myData->Accel_Y_Data = (int16_t)(RX_Buffer[2] << 8 | RX_Buffer[3]);
 	myData->Accel_Z_Data = (int16_t)(RX_Buffer[4] << 8 | RX_Buffer[5]);
 }
+
+void READ_MAG(ICM20948_DATA* myData)
+{
+	SELECT_USER_BANK(UserBank_3);
+	WRITE_REGISTER(B3_I2C_SLV0_ADDR, AK09916_Address);
+	WRITE_REGISTER(B3_I2C_SLV0_REG, MAG_HXL);
+	READ_REGISTER(B0_EXT_SLV_SENS_DATA_00, 6);
+
+	myData->Mag_X_Data = (int16_t)(RX_Buffer[0] << 8 | RX_Buffer[1]);
+	myData->Mag_Y_Data = (int16_t)(RX_Buffer[2] << 8 | RX_Buffer[3]);
+	myData->Mag_Z_Data = (int16_t)(RX_Buffer[4] << 8 | RX_Buffer[5]);
+}
 /* functions */
+
+
+
+
+
+
+
+
+
+
+
+
+

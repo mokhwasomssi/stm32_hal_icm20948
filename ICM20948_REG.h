@@ -1,6 +1,6 @@
 /*
 * 
-* mokhwa_ICM20948_REGISTER.h : Define Entire Register of ICM-20948
+* mokhwa_ICM20948_REGISTER.h : Define Register List of ICM-20948
 * 
 * writer : mokhwasomssi
 * Chip : ICM-20948
@@ -8,8 +8,8 @@
 *
 */
 
-#ifndef __MOKHWA_ICM20948_REGISTER__
-#define __MOKHWA_ICM20948_REGISTER__
+#ifndef __MOKHWA_ICM20948_REGISTER_H__
+#define __MOKHWA_ICM20948_REGISTER_H__
 
 #define ICM20948						0xEA
 
@@ -186,6 +186,7 @@
 
 // Register Map for Magnetometer
 // Magnetometer Name : AK09916
+#define AK09916_Address					0x0C		// The slave address of AK09916
 
 #define MAG_WIA2						0x01		// Device ID : 0x09
 #define MAG_ST1							0x10		// Status 1 
@@ -206,4 +207,4 @@
 #define MAG_TS2							0x34
 
 
-#endif
+#endif	// __MOKHWA_ICM20948_REGISTER_H__

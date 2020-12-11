@@ -62,34 +62,35 @@ void SELECT_USER_BANK(UserBank UB)						// Select Bank Before Access the Registe
 }
 
 /* Initialize ICM-20948(Gyroscope, accelerometer) */
-void INIT_ICM20948(Gyro_ODR godr, Accel_ODR aodr, Gyro_Scale gs, Accel_Scale as)
+void INIT_ICM20948()
 {
-	// Wake the Chip from Sleep Mode
 	SELECT_USER_BANK(UsarBank_0);
-	WRITE_REGISTER(B0_PWR_MGMT_1, 0x01);					// 0x01 is CLKSEL = 1 (recommended clock selection)
+	WRITE_REGISTER(B0_PWR_MGMT_1, WAKE | CLKSEL);						// Wake the chip and Recommended clock selection(CLKSEL = 1)
 
-	// Set Output Data Rate
+	// Set Gyroscope ODR and Scale
 	SELECT_USER_BANK(UserBank_2);
-	WRITE_REGISTER(B2_GYRO_SMPLRT_DIV, godr);		// Output Data Rate = 1.1kHz / (1 + GYRO_SMPLRT_DIV)
-	WRITE_REGISTER(B2_ACCEL_SMPLRT_DIV_2, aodr);	// Output Data Rate = 1.1kHz / (1 + ACCEL_SMPLRT_DIV)
+	WRITE_REGISTER(B2_GYRO_SMPLRT_DIV, Gyro_ODR_1100Hz);				// Gyro ODR = 1.1kHz
+	WRITE_REGISTER(B2_GYRO_CONFIG_1, GYRO_FS_SEL_250dps | GYRO_FCHOICE);	// Gyro scale ±250dps and Enable DLPF
 
-	// Set Gyro and Accel Scale
-	SELECT_USER_BANK(UserBank_2);
-	WRITE_REGISTER(B2_GYRO_CONFIG_1, gs | 0x01);			// 0x01 is Enable Gyro and Accel DLPF (reset value)
-	WRITE_REGISTER(B2_ACCEL_CONFIG, as | 0x01);
+	// Set Accelerometer ODR and Scale
+	WRITE_REGISTER(B2_ACCEL_SMPLRT_DIV_2, Accel_ODR_1100Hz);			// Accel ODR = 1.1kHz
+	WRITE_REGISTER(B2_ACCEL_CONFIG, ACCEL_FS_SEL_2g | ACCEL_FCHOICE);	// Accel scale ±2g and Enable DLPF
 }
 
 /* Initialize AK09916(Magnetometer) */
 void INIT_AK09916()
 {
 	SELECT_USER_BANK(UsarBank_0);
-	WRITE_REGISTER(B0_USER_CTRL, I2C_MST_EN);
+	WRITE_REGISTER(B0_USER_CTRL, I2C_MST_EN);							// Enable I2C Master
 
 	SELECT_USER_BANK(UserBank_3);
-	WRITE_REGISTER(B3_I2C_SLV0_CTRL, I2C_SLV_EN | I2C_SLV_LENG_6bytes);
 
 
 
+	WRITE_REGISTER(B3_I2C_MST_ODR_CONFIG, I2C_MST_ODR_CONFIG);			// ODR configuration when gyroscope and accelerometer are disabled.
+	WRITE_REGISTER(B3_I2C_MST_CTRL, I2C_MST_CLK);						// Sets I2C master clock frequency
+	WRITE_REGISTER(B3_I2C_MST_DELAY_CTRL, Reset_Value);					// Disabled
+	WRITE_REGISTER(B3_I2C_SLV0_CTRL, I2C_SLV_EN | I2C_SLV_LENG_6bytes);	// Enable I2C Slave and Read 6 bytes data
 }
 
 void READ_GYRO(ICM20948_DATA* myData)
@@ -115,6 +116,11 @@ void READ_ACCEL(ICM20948_DATA* myData)
 void READ_MAG(ICM20948_DATA* myData)
 {
 	SELECT_USER_BANK(UserBank_3);
+
+	WRITE_REGISTER(B3_I2C_SLV0_ADDR, AK09916_Address);
+	WRITE_REGISTER(B3_I2C_SLV0_REG, MAG_CNTL2);
+	WRITE_REGISTER(B3_I2C_SLV0_DO, 0x02);
+
 	WRITE_REGISTER(B3_I2C_SLV0_ADDR, AK09916_Address);
 	WRITE_REGISTER(B3_I2C_SLV0_REG, MAG_HXL);
 	READ_REGISTER(B0_EXT_SLV_SENS_DATA_00, 6);

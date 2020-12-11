@@ -43,7 +43,46 @@ typedef struct _ICM20948_DATA
 /* ICM20948 Data Structure */
 
 
-/* typedef */
+/* typedef Register Setting */
+typedef enum _USER_CTRL				/* ICM-20948 DataSheet Page 36/89 */
+{
+	DMP_EN 			= 1 << 7,		// Enables DMP features
+	FIFO_EN 		= 1 << 6,		// Enable FIFO operation mode
+	I2C_MST_EN 		= 1 << 5,		// Enable the I2C Master I/F module
+	I2C_IF_DIS		= 1 << 4,		// Reset I2C Slave module
+	DMP_RST 		= 1 << 3,		// Reset DMP module
+	SRAM_RST 		= 1 << 2,		// Reset SRAM module
+	I2C_MST_RST		= 1 << 1		// Reset I2C Master module
+} USER_CTRL;
+/* typedef Register Setting */
+
+
+/* typedef Register Value of I2C */
+typedef enum _I2C_MST_ODR_CONFIG			/* ICM-20948 DataSheet Page 68/89 */
+{
+	I2C_MST_ODR_CONFIG = 0					// ODR configuration for external sensor when gyroscope and accelerometer are disabled.
+											// ODR = 1.1kHz / ( 2 ^(odr_config[3:0]) )
+} I2C_MST_ODR_CONFIG;
+
+typedef enum _I2C_MST_CTRL
+{
+
+} I2C_MST_CTRL;
+
+
+typedef enum _I2C_SLV_CTRL					/* ICM-20948 DataSheet Page 70/89 */
+{
+	I2C_SLV_EN				= 1 << 7,		// Enable reading data from this slave.
+	I2C_SLV_BYTE_SW 		= 1 << 6,		// Swap bytes when reading both the low and high byte of a word.
+	I2C_SLV_REG_DIS 		= 1 << 5,		// When set, transaction does not write a register value.
+	I2C_SLV_GRP 			= 1 << 4,		// External sensor data typically comes in as groups of two bytes
+	I2C_SLV_LENG_6bytes 	= 6				// Number of bytes to be read from I2C slave
+} I2C_SLV_CTRL;
+/* typedef Register Value of I2C */
+
+
+
+/* typedef ICM-20948 Register Value */
 typedef enum _UserBank
 {
 	UsarBank_0,
@@ -81,7 +120,10 @@ typedef enum _AccelFullScaleSellet
 	Accel_Scale_8g = 5,
 	Accel_Scale_16g = 7
 } Accel_Scale;
-/* typedef */
+/* typedef ICM-20948 Register Value */
+
+
+
 
 
 /* functions */

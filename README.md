@@ -1,7 +1,8 @@
 ## Simple ICM20948 Library (sorry, not working yet)
 Very Simple ICM-20948 library (STM32 HAL)  
-I'm still working on it...
+I'm still working on it...  
 
+##### Auxiliary I2C READ works well ! 
 ~~~
 uint8_t WHOAMI_AK09916()
 {
@@ -21,5 +22,27 @@ uint8_t WHOAMI_AK09916()
 	ICM20948_READ(B0_EXT_SLV_SENS_DATA_00, 1);
 
 	return rx_buffer[0];	// 0x09
+}
+~~~
+
+##### Auxiliary I2C READ / WRITE works well ! 
+~~~
+void INIT_MAG()
+{
+	SELECT_USER_BANK(UserBank_3);
+	ICM20948_WRITE(B3_I2C_SLV0_ADDR, WRITE | ADDRESS_AK09916);
+	ICM20948_WRITE(B3_I2C_SLV0_REG, MAG_CNTL2);
+	ICM20948_WRITE(B3_I2C_SLV0_DO, Continuous_measurement_mode_4);
+	ICM20948_WRITE(B3_I2C_SLV0_CTRL, 0x81);
+	HAL_Delay(10);
+
+	SELECT_USER_BANK(UserBank_3);
+	ICM20948_WRITE(B3_I2C_SLV0_ADDR, READ | ADDRESS_AK09916);
+	ICM20948_WRITE(B3_I2C_SLV0_REG, MAG_CNTL2);
+	ICM20948_WRITE(B3_I2C_SLV0_CTRL, 0x81);
+	HAL_Delay(10);
+
+	SELECT_USER_BANK(UserBank_0);
+	ICM20948_READ(B0_EXT_SLV_SENS_DATA_00, 1);
 }
 ~~~

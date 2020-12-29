@@ -44,8 +44,11 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+
 ICM20948_DATA MYDATA;
-uint8_t whoami;
+uint8_t whoami_icm;
+uint8_t whoami_mag;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -72,7 +75,7 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+	HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -89,16 +92,20 @@ int main(void)
   MX_GPIO_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
-  INIT_ICM20948();
 
-  //whoami = WHOAMI_AK09916();
+  INIT_ICM20948();
+  INIT_MAG();
 
 
   if(WHOAMI_AK09916() == DEVICE_ID_AK09916)
-	  HAL_GPIO_WritePin(Debug_LED_GPIO_Port, Debug_LED_Pin, RESET);	// Debug LED
-  INIT_MAG();
+  	  HAL_GPIO_WritePin(Debug_LED_GPIO_Port, Debug_LED_Pin, RESET);	// Debug LED
 
-  READ_MAG(&MYDATA);
+
+
+
+  //whoami_icm = WHOAMI_ICM20948();
+  //whoami_mag = WHOAMI_AK09916();
+  //READ_MAG(&MYDATA);
 
 
   /* USER CODE END 2 */
@@ -108,10 +115,11 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+
 	  //READ_GYRO(&MYDATA);
 	  //READ_ACCEL(&MYDATA);
-	  INIT_MAG();
 	  READ_MAG(&MYDATA);
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

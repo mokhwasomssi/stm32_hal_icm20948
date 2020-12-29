@@ -123,7 +123,7 @@ typedef enum _USER_CTRL
 typedef enum _I2C_MST_ODR_CONFIG
 {
 	I2C_MST_ODR_CONFIG = 0					// ODR configuration for external sensor when gyroscope and accelerometer are disabled.
-											// ODR = 1.1kHz / ( 2 ^(odr_config[3:0]) )
+									        // ODR = 1.1kHz / ( 2 ^(odr_config[3:0]) )
 } _I2C_MST_ODR_CONFIG;
 
 typedef enum _I2C_MST_CTRL
@@ -165,7 +165,6 @@ typedef enum _CNTL2
 	Continuous_measurement_mode_4 = 0b01000,	// ... 100Hz
 	Self_test_mode = 0b10000
 } CNTL2;
-/* Enumeration AK09916 */
 
 
 /* functions */
@@ -177,25 +176,20 @@ void SELECT_USER_BANK(UserBank UB);
 void ICM20948_READ(uint8_t RegisterAddress, uint8_t Size);
 void ICM20948_WRITE(uint8_t RegisterAddress, uint8_t WriteData);
 
-void MAG_READ(uint8_t RegisterAddress, uint8_t Size);
-void MAG_WRITE(uint8_t RegisterAddress, uint8_t WriteData);
-
-void MAG_READ_MOD(uint8_t magregaddr, uint8_t len);
-void MAG_WRITE_MOD(uint8_t magregaddr, uint8_t data);
-
-ICM20948_STATUS ICM20948_DATA_READY();
-
 uint8_t WHOAMI_ICM20948();
 uint8_t WHOAMI_AK09916();
 
 void INIT_ICM20948();
-void INIT_AK09916();
 void INIT_MAG();
 
 void READ_GYRO(ICM20948_DATA* myData);
 void READ_ACCEL(ICM20948_DATA* myData);
 void READ_MAG(ICM20948_DATA* myData);
-/* functions */
+
+/* Test Function */
+uint8_t WHOAMI_AK09916_1();
+void INIT_MAG_1();
+
 
 #endif	// __MOKHWA_ICM20948_H__
 

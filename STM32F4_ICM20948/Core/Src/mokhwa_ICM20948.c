@@ -2,7 +2,7 @@
 *
 * mokhwa_ICM20948.h
 *
-* Updata Data : 2020-12-30
+* Updata Date : 2020-12-30
 * writer : mokhwasomssi
 * Chip : ICM-20948
 * Breakout Board : SparkFun 9Dof IMU Breakout - ICM-20948 (Qwiic)
@@ -12,9 +12,10 @@
 #include "mokhwa_ICM20948_REGISTER.h"
 #include "mokhwa_ICM20948.h"
 
+
 /* Temporary Variable */
 uint8_t tx_buffer[6] = {0};
-uint8_t rx_buffer[7] = {0};
+uint8_t rx_buffer[8] = {0};
 
 
 /* Change The State of CS */
@@ -182,19 +183,45 @@ void READ_ACCEL(ICM20948_DATA* myData)
 
 void READ_MAG(ICM20948_DATA* myData)
 {
+	// Read status1(ST1) register
 	SELECT_USER_BANK(UserBank_3);
 	ICM20948_WRITE(B3_I2C_SLV0_ADDR, READ | ADDRESS_AK09916);
-	ICM20948_WRITE(B3_I2C_SLV0_REG, MAG_HXL);
-	ICM20948_WRITE(B3_I2C_SLV0_CTRL, 0x87);
+	ICM20948_WRITE(B3_I2C_SLV0_REG, MAG_ST1); 
+	ICM20948_WRITE(B3_I2C_SLV0_CTRL, 0x81);
 	HAL_Delay(10);
 
 	SELECT_USER_BANK(UserBank_0);
-	ICM20948_READ(B0_EXT_SLV_SENS_DATA_00, 7);
+	ICM20948_READ(B0_EXT_SLV_SENS_DATA_00, 1);
+	HAL_Delay(10);
+
+	// check data is ready
+	while((rx_buffer[0] & 0x01) == 0); 
+
+	// Read Measurement data register(HXL to HZH)
+	SELECT_USER_BANK(UserBank_3);
+	ICM20948_WRITE(B3_I2C_SLV0_ADDR, READ | ADDRESS_AK09916);
+	ICM20948_WRITE(B3_I2C_SLV0_REG, MAG_HXL); 
+	ICM20948_WRITE(B3_I2C_SLV0_CTRL, 0x86); // HXL to HZH(0~6)
+	HAL_Delay(10);
+
+	SELECT_USER_BANK(UserBank_0);
+	ICM20948_READ(B0_EXT_SLV_SENS_DATA_00, 6);
 	HAL_Delay(10);
 
 	myData->Mag_X_Data = (int16_t)(rx_buffer[1] << 8 | rx_buffer[0]);
 	myData->Mag_Y_Data = (int16_t)(rx_buffer[3] << 8 | rx_buffer[2]);
 	myData->Mag_Z_Data = (int16_t)(rx_buffer[5] << 8 | rx_buffer[4]);
+
+	// Read status2(ST2) register
+	SELECT_USER_BANK(UserBank_3);
+	ICM20948_WRITE(B3_I2C_SLV0_ADDR, READ | ADDRESS_AK09916);
+	ICM20948_WRITE(B3_I2C_SLV0_REG, MAG_ST2); 
+	ICM20948_WRITE(B3_I2C_SLV0_CTRL, 0x81);
+	HAL_Delay(10);
+
+	SELECT_USER_BANK(UserBank_0);
+	ICM20948_READ(B0_EXT_SLV_SENS_DATA_00, 1);
+	HAL_Delay(10);
 }
 
 /* Test Function */
@@ -215,7 +242,20 @@ uint8_t WHOAMI_AK09916_1()
 	SELECT_USER_BANK(UserBank_0);
 	ICM20948_READ(B0_EXT_SLV_SENS_DATA_00, 1);
 
-	return rx_buffer[0];	// 0x09
+	rx_buffer[7] = rx_buffer[0];
+
+	SELECT_USER_BANK(UserBank_3);
+	ICM20948_WRITE(B3_I2C_SLV0_ADDR, READ | ADDRESS_AK09916);
+	ICM20948_WRITE(B3_I2C_SLV0_REG, MAG_CNTL2);
+	ICM20948_WRITE(B3_I2C_SLV0_CTRL, 0x81);
+	HAL_Delay(10);
+
+	SELECT_USER_BANK(UserBank_0);
+	ICM20948_READ(B0_EXT_SLV_SENS_DATA_00, 1);
+	HAL_Delay(10);
+	
+
+	//return rx_buffer[0];	// 0x09
 }
 
 void INIT_MAG_1()

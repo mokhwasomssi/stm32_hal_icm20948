@@ -5,7 +5,8 @@ I'm still working on it...
 ### To-do List  
 - [ ] Troubleshooting problem that mag doesn't update measured value  
 - [ ] Unit conversion  
-- [ ] Calculate communication speed
+- [ ] Calculate communication speed  
+- [ ] Calibration 
 
 ### 0. Development environment
 * IDE : STM32Cubeide 1.5.0 (STM32Cube HAL)  

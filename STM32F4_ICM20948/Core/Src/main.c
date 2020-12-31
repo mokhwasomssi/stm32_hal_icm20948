@@ -100,7 +100,9 @@ int main(void)
   if(WHOAMI_AK09916() == DEVICE_ID_AK09916)
   	  HAL_GPIO_WritePin(Debug_LED_GPIO_Port, Debug_LED_Pin, RESET);	// Debug LED
 
+  //whoami_mag = WHOAMI_AK09916();
 
+  //WHOAMI_AK09916_1();
 
 
   //whoami_icm = WHOAMI_ICM20948();

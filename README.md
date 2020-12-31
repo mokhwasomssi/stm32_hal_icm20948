@@ -2,7 +2,7 @@
 Very Simple ICM-20948 library (STM32 HAL)  
 I'm still working on it...  
 
-##### Auxiliary I2C READ works well ! 
+### Auxiliary I2C READ works well ! 
 ~~~
 uint8_t WHOAMI_AK09916()
 {
@@ -25,7 +25,7 @@ uint8_t WHOAMI_AK09916()
 }
 ~~~
 
-##### Auxiliary I2C READ / WRITE works well ! 
+### Auxiliary I2C READ / WRITE works well ! 
 ~~~
 void INIT_MAG()
 {
@@ -47,7 +47,7 @@ void INIT_MAG()
 }
 ~~~
 
-##### mag update well
+### mag update well
 ~~~
 uint8_t WHOAMI_AK09916()
 {
@@ -97,6 +97,7 @@ void INIT_MAG()
 	HAL_Delay(10);
 }
 ~~~
+~~~
 void READ_MAG(ICM20948_DATA* myData)
 {
 	// Read status1(ST1) register
@@ -139,5 +140,4 @@ void READ_MAG(ICM20948_DATA* myData)
 	ICM20948_READ(B0_EXT_SLV_SENS_DATA_00, 1);
 	HAL_Delay(10);
 }
-~~~
 ~~~

@@ -46,3 +46,98 @@ void INIT_MAG()
 	ICM20948_READ(B0_EXT_SLV_SENS_DATA_00, 1);
 }
 ~~~
+
+##### mag update well
+~~~
+uint8_t WHOAMI_AK09916()
+{
+	SELECT_USER_BANK(UserBank_3);
+	ICM20948_WRITE(B3_I2C_SLV0_ADDR, READ | ADDRESS_AK09916);
+	ICM20948_WRITE(B3_I2C_SLV0_REG, MAG_WIA2);
+	ICM20948_WRITE(B3_I2C_SLV0_CTRL, I2C_SLV_EN | 1);
+	HAL_Delay(10);
+
+	SELECT_USER_BANK(UserBank_0);
+	ICM20948_READ(B0_EXT_SLV_SENS_DATA_00, 1);
+	HAL_Delay(10);
+
+	return rx_buffer[0];	// 0x09
+}
+~~~
+~~~
+void INIT_MAG()
+{
+	// I2C Master and Slave Reset
+	SELECT_USER_BANK(UserBank_0);
+	ICM20948_WRITE(B0_USER_CTRL, I2C_MST_RST);
+	HAL_Delay(10);
+
+	SELECT_USER_BANK(UserBank_3);
+	ICM20948_WRITE(B3_I2C_SLV0_ADDR, WRITE | ADDRESS_AK09916);
+	ICM20948_WRITE(B3_I2C_SLV0_REG, MAG_CNTL3);
+	ICM20948_WRITE(B3_I2C_SLV0_DO, 0x01);
+	ICM20948_WRITE(B3_I2C_SLV0_CTRL, 0x81);
+	HAL_Delay(10);
+
+	// I2C Master and Slave Enable
+	SELECT_USER_BANK(UserBank_0);
+	ICM20948_WRITE(B0_USER_CTRL, I2C_MST_EN);
+	HAL_Delay(10);
+
+	SELECT_USER_BANK(UserBank_3);
+	ICM20948_WRITE(B3_I2C_SLV0_ADDR, WRITE | ADDRESS_AK09916);
+	ICM20948_WRITE(B3_I2C_SLV0_REG, MAG_CNTL2);
+	ICM20948_WRITE(B3_I2C_SLV0_DO, Continuous_measurement_mode_4);	// 100Hz
+	ICM20948_WRITE(B3_I2C_SLV0_CTRL, 0x81);
+	HAL_Delay(10);
+
+	// I2C Master Clock Frequency
+	SELECT_USER_BANK(UserBank_3);
+	ICM20948_WRITE(B3_I2C_MST_CTRL, I2C_MST_CLK); // 345.6 kHz
+	HAL_Delay(10);
+}
+~~~
+void READ_MAG(ICM20948_DATA* myData)
+{
+	// Read status1(ST1) register
+	SELECT_USER_BANK(UserBank_3);
+	ICM20948_WRITE(B3_I2C_SLV0_ADDR, READ | ADDRESS_AK09916);
+	ICM20948_WRITE(B3_I2C_SLV0_REG, MAG_ST1); 
+	ICM20948_WRITE(B3_I2C_SLV0_CTRL, 0x81);
+	HAL_Delay(10);
+
+	SELECT_USER_BANK(UserBank_0);
+	ICM20948_READ(B0_EXT_SLV_SENS_DATA_00, 1);
+	HAL_Delay(10);
+
+	// check data is ready
+	while((rx_buffer[0] & 0x01) == 0); 
+
+	// Read Measurement data register(HXL to HZH)
+	SELECT_USER_BANK(UserBank_3);
+	ICM20948_WRITE(B3_I2C_SLV0_ADDR, READ | ADDRESS_AK09916);
+	ICM20948_WRITE(B3_I2C_SLV0_REG, MAG_HXL); 
+	ICM20948_WRITE(B3_I2C_SLV0_CTRL, 0x86); // HXL to HZH(0~6)
+	HAL_Delay(10);
+
+	SELECT_USER_BANK(UserBank_0);
+	ICM20948_READ(B0_EXT_SLV_SENS_DATA_00, 6);
+	HAL_Delay(10);
+
+	myData->Mag_X_Data = (int16_t)(rx_buffer[1] << 8 | rx_buffer[0]);
+	myData->Mag_Y_Data = (int16_t)(rx_buffer[3] << 8 | rx_buffer[2]);
+	myData->Mag_Z_Data = (int16_t)(rx_buffer[5] << 8 | rx_buffer[4]);
+
+	// Read status2(ST2) register
+	SELECT_USER_BANK(UserBank_3);
+	ICM20948_WRITE(B3_I2C_SLV0_ADDR, READ | ADDRESS_AK09916);
+	ICM20948_WRITE(B3_I2C_SLV0_REG, MAG_ST2); 
+	ICM20948_WRITE(B3_I2C_SLV0_CTRL, 0x81);
+	HAL_Delay(10);
+
+	SELECT_USER_BANK(UserBank_0);
+	ICM20948_READ(B0_EXT_SLV_SENS_DATA_00, 1);
+	HAL_Delay(10);
+}
+~~~
+~~~

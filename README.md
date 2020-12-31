@@ -2,14 +2,18 @@
 Very Simple ICM-20948 library (STM32 HAL)  
 I'm still working on it...  
 
+### To-do List  
+- [ ] Troubleshooting problem that mag doesn't update measured value  
+- [ ] Unit conversion  
+- [ ] Calculate communication speed
+
 ### 0. Development environment
-* IDE : STM32Cubeide 1.5.0  
+* IDE : STM32Cubeide 1.5.0 (STM32Cube HAL)  
 https://www.st.com/en/development-tools/stm32cubeide  
 * MCU : WeAct Black Pill V3.0 (STM32F411CEU6)  
 https://github.com/WeActTC/MiniF4-STM32F4x1  
 * Sensor : SparkFun 9Dof IMU Breakout - ICM-20948 (Qwiic)   
 https://www.sparkfun.com/products/15335  
-
 
 ### 1. FEATURE   
 

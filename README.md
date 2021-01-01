@@ -1,4 +1,4 @@
-# Simple ICM20948 Library (Incomplete)
+# Simple ICM-20948 Library (Incomplete)
 Very Simple ICM-20948 library (STM32 HAL)  
 I'm still working on it...  
 
@@ -66,6 +66,9 @@ Maximum output speed : Low
 
 ## 3. Additional Description  
 ### (1) Product Overview
+* 9-axis MotionTracking device  
+    * 3-axis gyroscope, 3-axis accelerometer, 3-axis compass
+
 
 * IMU Sensor list  
 https://invensense.tdk.com/smartmotion/
@@ -96,11 +99,11 @@ https://invensense.tdk.com/smartmotion/
 ### (2) Read / Write ICM-20948 (SPI)
 *the minimum necessary to read/write ICM-20948*  
 
-* Registers to access
+* `ICM-20948` Registers to access
 
-|User Bank|Address|Register Name|Description|
+|User Bank|Address|Register Name|Features to use|
 |:---:|:---:|:---:|:---:|
-|0|0x00|WHO_AM_I|reset value is 0xEA|
+|0|0x00|WHO_AM_I|Device ID is 0xEA|
 |0|0x03|USER_CTRL|SPI mode only|
 |0|0x06|PWR_MGMT_1|device reset <br> sleep mode <br> select clock source|
 |0|0x2D - 0x32|ACCEL_XOUT_H - ACCEL_ZOUT_L|accel data|
@@ -115,5 +118,31 @@ https://invensense.tdk.com/smartmotion/
 
 ### (3) Read / Write AK09916 (Auxiliary I2C)  
 *This section is about how to access external sensor through ICM-20948*  
-*I'll select `AK09916`(magnetometer) in `ICM-20948` for example.*
+*select `AK09916`(magnetometer) in `ICM-20948` as a external sensor*
 
+* `ICM-20948` (master) Registers to access 
+
+|User Bank|Address|Register Name|Features to use|
+|:---:|:---:|:---:|:---:|
+|0|0x03|USER_CTRL|reset I2C master module<br> enable I2C master module|
+|0|0x3B - 0x40|EXT_SLV_SENS_DATA_00 - 05|data from external I2C device|
+|3|0x01|I2C_MST_CTRL|set I2C master clock frequency|
+|3|0x03|I2C_SLV0_ADDR|I2C slave 0 address|
+|3|0x04|I2C_SLV0_REG|I2C slave 0 register address|
+|3|0x05|I2C_SLV0_CTRL|enable reading data <br> length to be read|
+|3|0x06|I2C_SLV0_DO|data to write|
+
+
+* `AK09916` (slave) Registers to access  
+
+|Address|Register Name|Features to use|
+|:---:|:---:|:---:|
+|0x01|WIA2|Device ID is 0x09|
+|0x10|ST1|data ready <br> data overrun|
+|0x11 - 0x16|HXL - HZH|mag data|
+|0x18|ST2|mag overflow|
+|0x31|CNTL2|operation mode setting|
+|0x31|CNTL3| soft reset|
+
+
+* Reading Process

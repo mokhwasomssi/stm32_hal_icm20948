@@ -4,7 +4,6 @@ I'm still working on it...
 
 
 ## 0. Development environment  
----
 * IDE : STM32Cubeide 1.5.0 (STM32Cube HAL)  
 https://www.st.com/en/development-tools/stm32cubeide  
 * MCU : WeAct Black Pill V3.0 (STM32F411CEU6)  
@@ -13,14 +12,12 @@ https://github.com/WeActTC/MiniF4-STM32F4x1
 https://www.sparkfun.com/products/15335  
 
 ## 1. FEATURE   
----
 * Check connected device is right
 * Read raw data of 3-axis gyroscope and 3-aixs accelerometer (SPI) 
    * `MCU(master)` - `ICM 20948(slave)`
 * Read raw data of 3-axis Magnetometer (Auxiliary I2C)  
     * `ICM 20948(master)` - `AK09916(slave)`
 ## 2. User Configuration   
----
 * STM32F4xx
 * SPI - SPI1  
 * CS  - PA4
@@ -68,17 +65,16 @@ Maximum output speed : Low
 ``` 
 
 ## 3. Additional Description  
----
 ### (1) Product Overview
 
 * IMU Sensor list  
+https://invensense.tdk.com/smartmotion/
 
-|axis|Not Recommended for New Designs|Recommended for New Designs|
+|Axis|Not Recommended for New Designs|Recommended for New Designs|
 |:---:|:---:|:---:|
 |6-axis|`MPU-6050`|`ICM-20602`|
 |9-axis|`MPU-9250`|`ICM-20948`| 
  
-
 * Serial Communications Interfaces
     * Primary I2C and SPI ( `ICM-20948` acts like a slave )
     * Auxiliary I2C ( `ICM-20948` acts like a master )  
@@ -91,13 +87,33 @@ Maximum output speed : Low
     * Compass with a wide range
         * ±4900μT
 
+* User Bank
+    * It is different from `MPU-9250`
+    * User Bank 0, 1, 2, 3 is a group of registers
+    * Access the register, after select User Bank of the register
+
    
-### (2) Read / Write ICM-20948
+### (2) Read / Write ICM-20948 (SPI)
+*the minimum necessary to read/write ICM-20948*  
 
-### (3) Read / Write AK09916 (external sensor)  
+* Registers to access
 
-*This section is about how to access external sensor through ICM-20948*<br/>  
+|User Bank|Address|Register Name|Description|
+|:---:|:---:|:---:|:---:|
+|0|0x00|WHO_AM_I|reset value is 0xEA|
+|0|0x03|USER_CTRL|SPI mode only|
+|0|0x06|PWR_MGMT_1|device reset <br> sleep mode <br> select clock source|
+|0|0x2D - 0x32|ACCEL_XOUT_H - ACCEL_ZOUT_L|accel data|
+|0|0x33 - 0x38|GYRO_XOUT_H - GYRO_ZOUT_L|gyro data|
+|2|0x00|GYRO_SMPLRT_DIV|gyro sample rate divider|
+|2|0x01|GYRO_CONFIG_1|gyro full scale select|
+|2|0x16|ACCEL_SMPLRT_DIV_1|MSB for accel sample rate divder|
+|2|0x17|ACCEL_SMPLRT_DIV_2|LSB for accel sample rate divder|
+|2|0x20|ACCEL_CONFIG|accel full scale select|
 
-ICM-20948 supports an auxiliary I2C interface to external sensors.  
-I'll take `AK09916(magnetometer)` in ICM-20948 for example.  
-  
+
+
+### (3) Read / Write AK09916 (Auxiliary I2C)  
+*This section is about how to access external sensor through ICM-20948*  
+*I'll select `AK09916`(magnetometer) in `ICM-20948` for example.*
+

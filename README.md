@@ -1,6 +1,12 @@
-## Simple ICM20948 Library (sorry, not working yet)
+## TEST
 Very Simple ICM-20948 library (STM32 HAL)  
 I'm still working on it...  
+
+### To-do List  
+- [x] Resolve problem that mag data are not updated
+- [ ] Calibration 
+- [ ] Unit conversion  
+- [ ] Calculate communication speed  
 
 ### Auxiliary I2C READ works well ! 
 ~~~

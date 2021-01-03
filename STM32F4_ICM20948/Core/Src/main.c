@@ -94,7 +94,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   INIT_ICM20948();
-  INIT_MAG();
+  INIT_AK09916();
 
 
   if(WHOAMI_AK09916() == DEVICE_ID_AK09916)
@@ -118,8 +118,8 @@ int main(void)
   {
     /* USER CODE END WHILE */
 
-	  //READ_GYRO(&MYDATA);
-	  //READ_ACCEL(&MYDATA);
+	  READ_GYRO(&MYDATA);
+	  READ_ACCEL(&MYDATA);
 	  READ_MAG(&MYDATA);
 
     /* USER CODE BEGIN 3 */

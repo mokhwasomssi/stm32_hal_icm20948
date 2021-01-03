@@ -1,7 +1,8 @@
 /*
 * 
-* mokhwa_ICM20948_REGISTER.h : Define Register List of ICM-20948
+* mokhwa_ICM20948_REGISTER.h
 * 
+* Updata Date : 2020-01-03
 * writer : mokhwasomssi
 * Chip : ICM-20948
 * Breakout Board : SparkFun 9Dof IMU Breakout - ICM-20948 (Qwiic)

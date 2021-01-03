@@ -2,6 +2,7 @@
 *
 * mokhwa_ICM20948.h
 *
+* Updata Date : 2020-01-03
 * writer : mokhwasomssi
 * Chip : ICM-20948
 * Breakout Board : SparkFun 9Dof IMU Breakout - ICM-20948 (Qwiic)
@@ -21,18 +22,6 @@
 #define SPI_ICM20948 		(&hspi1)			// SPI Number
 #define CS_PIN_PORT			GPIOA				// CS Pin
 #define CS_PIN_NUMBER		GPIO_PIN_4
-/* User Configuration */
-
-
-/* ICM20948 Status Enumeration */
-typedef enum _ICM20948_STATUS
-{
-	ICM20948_STATUS_OK 		= 0,
-	ICM20948_STATUS_ERROR 	= 1,
-	ICM20948_WRONG_ID	 	= 2,
-	ICM20948_NO_DATA		= 3
-} ICM20948_STATUS;
-/* ICM20948 Status Enumeration */
 
 
 /* ICM20948 Data Structure */
@@ -63,6 +52,16 @@ typedef enum _UserBank
 } UserBank;
 /* UserBank */
 
+typedef enum _USER_CTRL
+{
+	DMP_EN 			= 1 << 7,		// Enables DMP features
+	FIFO_EN 		= 1 << 6,		// Enable FIFO operation mode
+	I2C_MST_EN 		= 1 << 5,		// Enable the I2C Master I/F module
+	I2C_IF_DIS		= 1 << 4,		// Reset I2C Slave module
+	DMP_RST 		= 1 << 3,		// Reset DMP module
+	SRAM_RST 		= 1 << 2,		// Reset SRAM module
+	I2C_MST_RST		= 1 << 1		// Reset I2C Master module
+} USER_CTRL;
 
 /* Enumeration ICM-20948 */
 typedef enum _PWR_MGNT_1			// Reset Value : 0x41
@@ -109,16 +108,7 @@ typedef enum _ACCEL_CONFIG			// Reset Value : 0x01
 	ACCEL_FCHOICE = 1				// Enable accel DLPF
 } ACCEL_CONFIG;
 
-typedef enum _USER_CTRL
-{
-	DMP_EN 			= 1 << 7,		// Enables DMP features
-	FIFO_EN 		= 1 << 6,		// Enable FIFO operation mode
-	I2C_MST_EN 		= 1 << 5,		// Enable the I2C Master I/F module
-	I2C_IF_DIS		= 1 << 4,		// Reset I2C Slave module
-	DMP_RST 		= 1 << 3,		// Reset DMP module
-	SRAM_RST 		= 1 << 2,		// Reset SRAM module
-	I2C_MST_RST		= 1 << 1		// Reset I2C Master module
-} USER_CTRL;
+
 
 typedef enum _I2C_MST_ODR_CONFIG
 {
@@ -173,23 +163,21 @@ void CS_LOW();
 
 void SELECT_USER_BANK(UserBank UB);
 
-void ICM20948_READ(uint8_t RegisterAddress, uint8_t Size);
-void ICM20948_WRITE(uint8_t RegisterAddress, uint8_t WriteData);
+void ICM20948_READ(uint8_t regaddr, uint8_t len);
+void ICM20948_WRITE(uint8_t regaddr, uint8_t data);
+
+void AK09916_READ(uint8_t regaddr, uint8_t len);
+void AK09916_WRTIE(uint8_t regaddr, uint8_t data);
 
 uint8_t WHOAMI_ICM20948();
 uint8_t WHOAMI_AK09916();
 
 void INIT_ICM20948();
-void INIT_MAG();
+void INIT_AK09916();
 
 void READ_GYRO(ICM20948_DATA* myData);
 void READ_ACCEL(ICM20948_DATA* myData);
 void READ_MAG(ICM20948_DATA* myData);
-
-/* Test Function */
-uint8_t WHOAMI_AK09916_1();
-void INIT_MAG_1();
-
 
 #endif	// __MOKHWA_ICM20948_H__
 

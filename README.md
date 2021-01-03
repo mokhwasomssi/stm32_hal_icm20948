@@ -1,9 +1,7 @@
-# Simple ICM-20948 Library (Incomplete)
-I'm still working on it...    
+# Simple ICM-20948 Library
 
-Very Simple ICM-20948 library for reading low data only (STM32 HAL)  
+**Just reading raw data only**  
 It doesn't include DMP, interrupt, FIFO...  
-
 
 ## 0. Development environment  
 * IDE : STM32Cubeide 1.5.0 (STM32Cube HAL)  
@@ -119,7 +117,6 @@ https://invensense.tdk.com/smartmotion/
 
 
 ### (3) Read / Write AK09916 (Auxiliary I2C)  
-*This section is about how to access external sensor through ICM-20948*  
 *select `AK09916`(magnetometer) in `ICM-20948` as a external sensor*
 
 * `ICM-20948` (master) Registers to access 

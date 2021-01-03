@@ -1,6 +1,8 @@
 # Simple ICM-20948 Library (Incomplete)
-Very Simple ICM-20948 library (STM32 HAL)  
-I'm still working on it...  
+I'm still working on it...    
+
+Very Simple ICM-20948 library for reading low data only (STM32 HAL)  
+It doesn't include DMP, interrupt, FIFO...  
 
 
 ## 0. Development environment  
@@ -143,6 +145,3 @@ https://invensense.tdk.com/smartmotion/
 |0x18|ST2|mag overflow|
 |0x31|CNTL2|operation mode setting|
 |0x31|CNTL3| soft reset|
-
-
-* Reading Process

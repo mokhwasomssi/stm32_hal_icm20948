@@ -22,7 +22,7 @@ https://www.sparkfun.com/products/15335
 * SPI - SPI1  
 * CS  - PA4
 
-_mokhwa_ICM20948.h_
+### _mokhwa_ICM20948.h_
 ```
 ...
 
@@ -34,7 +34,7 @@ _mokhwa_ICM20948.h_
 #define CS_PIN_PORT         GPIOA			 	// CS Pin
 #define CS_PIN_NUMBER		GPIO_PIN_4
 ```  
-_STM32CubeMX_  
+### _STM32CubeMX_  
 * Setting  
 ```
 Project Manager -> Code Generator -> Generated files 
@@ -63,6 +63,33 @@ GPIO mode : Output Push Pull
 GPIO Pull-up/Pull-down : No pull-up and no pull-down
 Maximum output speed : Low
 ``` 
+
+### _main.c_
+* Monitor sensor data using `live watch` in STM32CubeIDE or `STM32CubeMonitor`
+```
+...
+
+#include "mokhwa_ICM20948.h"
+
+...
+
+int main(void)
+{
+    ...
+
+    INIT_ICM20948();
+    INIT_AK09916();
+
+    ...
+
+    while(1)
+    {
+        READ_GYRO(&MYDATA);
+	    READ_ACCEL(&MYDATA);
+	    READ_MAG(&MYDATA);
+    }
+}
+```
 
 ## 3. Additional Description  
 ### (1) Product Overview

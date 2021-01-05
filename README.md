@@ -73,6 +73,10 @@ Maximum output speed : Low
 
 ...
 
+ICM20948_DATA MYDATA; // data struct
+
+...
+
 int main(void)
 {
     ...

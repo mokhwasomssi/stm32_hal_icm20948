@@ -105,8 +105,8 @@ int main(void)
   //WHOAMI_AK09916_1();
 
 
-  //whoami_icm = WHOAMI_ICM20948();
-  //whoami_mag = WHOAMI_AK09916();
+  whoami_icm = WHOAMI_ICM20948();
+  whoami_mag = WHOAMI_AK09916();
   //READ_MAG(&MYDATA);
 
 

@@ -81,16 +81,23 @@ int main(void)
 {
     ...
 
+  /* USER CODE BEGIN 2 */
+
     INIT_ICM20948();
     INIT_AK09916();
 
+  /* USER CODE END 2 */
     ...
+
+
 
     while(1)
     {
+
         READ_GYRO(&MYDATA);
 	    READ_ACCEL(&MYDATA);
 	    READ_MAG(&MYDATA);
+        
     }
 }
 ```

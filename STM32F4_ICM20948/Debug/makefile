@@ -54,8 +54,8 @@ all: main-build
 main-build: STM32F4_ICM20948.elf secondary-outputs
 
 # Tool invocations
-STM32F4_ICM20948.elf: $(OBJS) $(USER_OBJS) C:\Users\mokhw\Desktop\GitHub\STM32_ICM20948\STM32F4_ICM20948\STM32F411CEUX_FLASH.ld
-	arm-none-eabi-gcc -o "STM32F4_ICM20948.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\mokhw\Desktop\GitHub\STM32_ICM20948\STM32F4_ICM20948\STM32F411CEUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32F4_ICM20948.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+STM32F4_ICM20948.elf: $(OBJS) $(USER_OBJS) C:\Users\mokhw\Desktop\GitHub\stm32f4_hal_icm20948\STM32F4_ICM20948\STM32F411CEUX_FLASH.ld
+	arm-none-eabi-gcc -o "STM32F4_ICM20948.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\mokhw\Desktop\GitHub\stm32f4_hal_icm20948\STM32F4_ICM20948\STM32F411CEUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32F4_ICM20948.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

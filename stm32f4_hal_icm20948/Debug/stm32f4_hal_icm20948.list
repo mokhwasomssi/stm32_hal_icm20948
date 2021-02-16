@@ -1,5 +1,5 @@
 
-STM32F4_ICM20948.elf:     file format elf32-littlearm
+stm32f4_hal_icm20948.elf:     file format elf32-littlearm
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn

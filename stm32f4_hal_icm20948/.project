@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>STM32F4_ICM20948</name>
+	<name>stm32f4_hal_icm20948</name>
 	<comment></comment>
 	<projects>
 	</projects>

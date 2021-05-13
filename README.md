@@ -1,4 +1,4 @@
-# Simple ICM-20948 Library
+# Simple icm_20948 lib for STM32 HAL
 
 **Just reading raw data only**  
 It doesn't include DMP, interrupt, FIFO...  
@@ -22,19 +22,14 @@ https://www.sparkfun.com/products/15335
 * SPI - SPI1  
 * CS  - PA4
 
-### _mokhwa_ICM20948.h_
+### in `icm_20948.h`
 ```
-...
-
-#include "stm32f4xx_hal.h"
-
-...
-
+// User Configuration
 #define SPI_ICM20948 		(&hspi1)	  	  	// SPI Number
 #define CS_PIN_PORT         GPIOA			 	// CS Pin
 #define CS_PIN_NUMBER		GPIO_PIN_4
 ```  
-### _STM32CubeMX_  
+### STM32CubeMX  
 * Setting  
 ```
 Project Manager -> Code Generator -> Generated files 
@@ -58,22 +53,36 @@ NSS Signal Type : Software
 ``` 
 * CS (PA4)
 ```
+GPIO_Output
+
 GPIO output level : High
 GPIO mode : Output Push Pull
 GPIO Pull-up/Pull-down : No pull-up and no pull-down
 Maximum output speed : Low
 ``` 
 
-### _main.c_
-* Monitor sensor data using `live watch` in STM32CubeIDE or `STM32CubeMonitor`
+### in `main.c`
+* Monitor sensor data using `live watch` in STM32CubeIDE
+* Monitor status using `Serial Wire Viewer`
 ```
 ...
 
-#include "mokhwa_ICM20948.h"
+#include "icm_20948.h"
 
 ...
 
-ICM20948_DATA MYDATA; // data struct
+    /* USER CODE BEGIN 0 */
+
+    int _write(int file, char *ptr, int len)
+    {
+        for(int i = 0; i < len; i++)
+        {
+            ITM_SendChar(*ptr++);
+        }
+        return len;
+    }
+
+    /* USER CODE END 0 */
 
 ...
 
@@ -81,25 +90,35 @@ int main(void)
 {
     ...
 
-  /* USER CODE BEGIN 2 */
 
-    INIT_ICM20948();
-    INIT_AK09916();
-
-  /* USER CODE END 2 */
     ...
 
+    /* USER CODE BEGIN 2 */
 
+    // initialize
+    icm20948_init(gy_fs_2000dps, odr_1125_hz, ac_fs_2g, odr_1125_hz);
+    ak09916_init(continuous_measure_100hz);
+
+    // check sensor id
+    whoami_icm20948();
+    whoami_ak09916();
+
+    /* USER CODE END 2 */
+
+    ...
 
     while(1)
     {
-
-        READ_GYRO(&MYDATA);
-	    READ_ACCEL(&MYDATA);
-	    READ_MAG(&MYDATA);
-        
+        read_gyro(&gyro_data, unit_lsb);
+        read_accel(&accel_data, unit_lsb);
+        read_mag(&mag_data, unit_lsb);
     }
+
+    ...
+
 }
+
+...
 ```
 
 ## 3. Additional Description  

@@ -7,6 +7,9 @@ __ICM-20948, SPI, STM32 HAL__
 * IDE : STM32CubeIDE
 * ICM-20948 module : [SparkFun 9Dof IMU Breakout - ICM-20948 (Qwiic)](https://www.sparkfun.com/products/15335)
 
+<img src = "https://user-images.githubusercontent.com/48342925/125441402-2af7d878-53d7-4d2f-83df-f304df4c330c.png" width = "50%"><img src = "https://user-images.githubusercontent.com/48342925/125441479-3370f3fb-8485-4d11-ad3e-1eb6e697f8e0.png" width = "50%">
+
+
 ## 1. FEATURE   
 * Check connected device is right
 * Read raw data of 3-axis gyroscope and 3-aixs accelerometer (SPI) 

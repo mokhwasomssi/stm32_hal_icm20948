@@ -23,4 +23,4 @@
 "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.o"
 "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.o"
 "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.o"
-"ICM20948/icm_20948.o"
+"ICM20948/icm20948.o"

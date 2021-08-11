@@ -25,7 +25,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
-#include "icm_20948.h"
+#include "icm20948.h"
 
 /* USER CODE END Includes */
 
@@ -46,7 +46,12 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+axises my_gyro;
+axises my_accel;
 
+int16_t gyro_x;
+uint8_t icm20948_id;
+uint8_t mag_id;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -57,15 +62,6 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
-int _write(int file, char *ptr, int len)
-{
-	for(int i = 0; i < len; i++)
-	{
-		ITM_SendChar(*ptr++);
-	}
-	return len;
-}
 
 /* USER CODE END 0 */
 
@@ -100,15 +96,7 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
 
-  // initialize
-  icm20948_init(gy_fs_2000dps, odr_1125_hz, ac_fs_2g, odr_1125_hz);
-  ak09916_init(continuous_measure_100hz);
-
-  // check sensor id
-  whoami_icm20948();
-  whoami_ak09916();
-
-
+  icm20948_init();
 
   /* USER CODE END 2 */
 
@@ -120,9 +108,8 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	  read_gyro(&gyro_data, unit_lsb);
-	  read_accel(&accel_data, unit_lsb);
-	  read_mag(&mag_data, unit_lsb);
+	  icm20948_gyro_read(&my_gyro);
+	  icm20948_accel_read(&my_accel);
 
 
   }

@@ -1,3 +1,7 @@
 /Core/
 /Drivers/
 /ICM20948/
+/makefile
+/objects.list
+/objects.mk
+/sources.mk

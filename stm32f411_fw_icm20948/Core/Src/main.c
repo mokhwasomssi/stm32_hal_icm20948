@@ -49,12 +49,6 @@
 axises my_gyro;
 axises my_accel;
 
-int16_t gyro_x;
-uint8_t icm20948_id;
-uint8_t mag_id;
-
-uint16_t* gyro_cal_val;
-uint8_t gyro_cal[6];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -100,7 +94,6 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   icm20948_init();
-
 
 
   /* USER CODE END 2 */

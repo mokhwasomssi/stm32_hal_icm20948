@@ -21,29 +21,29 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, DATA
   8 .data         0000000c  20000000  08002b28  00020000  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  9 .bss          000000a0  2000000c  08002b34  0002000c  2**2
+  9 .bss          00000090  2000000c  08002b34  0002000c  2**2
                   ALLOC
- 10 ._user_heap_stack 00000604  200000ac  08002b34  000200ac  2**0
+ 10 ._user_heap_stack 00000604  2000009c  08002b34  0002009c  2**0
                   ALLOC
  11 .ARM.attributes 00000030  00000000  00000000  0002000c  2**0
                   CONTENTS, READONLY
- 12 .debug_info   00007741  00000000  00000000  0002003c  2**0
+ 12 .debug_info   000076d1  00000000  00000000  0002003c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_abbrev 0000170f  00000000  00000000  0002777d  2**0
+ 13 .debug_abbrev 0000170f  00000000  00000000  0002770d  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_aranges 00000700  00000000  00000000  00028e90  2**3
+ 14 .debug_aranges 00000700  00000000  00000000  00028e20  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_ranges 00000638  00000000  00000000  00029590  2**3
+ 15 .debug_ranges 00000638  00000000  00000000  00029520  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_macro  0001507a  00000000  00000000  00029bc8  2**0
+ 16 .debug_macro  0001507a  00000000  00000000  00029b58  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   0000806e  00000000  00000000  0003ec42  2**0
+ 17 .debug_line   0000806e  00000000  00000000  0003ebd2  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    00081882  00000000  00000000  00046cb0  2**0
+ 18 .debug_str    0008185e  00000000  00000000  00046c40  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000053  00000000  00000000  000c8532  2**0
+ 19 .comment      00000053  00000000  00000000  000c849e  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00001a90  00000000  00000000  000c8588  2**2
+ 20 .debug_frame  00001a90  00000000  00000000  000c84f4  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -524,8 +524,8 @@ int main(void)
 	  icm20948_gyro_read(&my_gyro);
  80005c4:	e7f8      	b.n	80005b8 <main+0x18>
  80005c6:	bf00      	nop
- 80005c8:	20000048 	.word	0x20000048
- 80005cc:	20000040 	.word	0x20000040
+ 80005c8:	20000038 	.word	0x20000038
+ 80005cc:	20000030 	.word	0x20000030
 
 080005d0 <SystemClock_Config>:
 /**
@@ -761,7 +761,7 @@ void MX_SPI1_Init(void)
 }
  800070c:	bf00      	nop
  800070e:	bd80      	pop	{r7, pc}
- 8000710:	20000050 	.word	0x20000050
+ 8000710:	20000040 	.word	0x20000040
  8000714:	40013000 	.word	0x40013000
 
 08000718 <HAL_SPI_MspInit>:
@@ -1189,7 +1189,7 @@ LoopFillZerobss:
   ldr r2, =_sbss
  80008b8:	2000000c 	.word	0x2000000c
   ldr r4, =_ebss
- 80008bc:	200000ac 	.word	0x200000ac
+ 80008bc:	2000009c 	.word	0x2000009c
 
 080008c0 <ADC_IRQHandler>:
  * @retval None       
@@ -1352,7 +1352,7 @@ __weak void HAL_IncTick(void)
  8000984:	4770      	bx	lr
  8000986:	bf00      	nop
  8000988:	20000008 	.word	0x20000008
- 800098c:	200000a8 	.word	0x200000a8
+ 800098c:	20000098 	.word	0x20000098
 
 08000990 <HAL_GetTick>:
   * @note This function is declared as __weak to be overwritten in case of other 
@@ -1372,7 +1372,7 @@ __weak uint32_t HAL_GetTick(void)
  800099c:	f85d 7b04 	ldr.w	r7, [sp], #4
  80009a0:	4770      	bx	lr
  80009a2:	bf00      	nop
- 80009a4:	200000a8 	.word	0x200000a8
+ 80009a4:	20000098 	.word	0x20000098
 
 080009a8 <HAL_Delay>:
   *       implementations in user file.
@@ -5770,7 +5770,7 @@ static void select_user_bank(userbank ub)
  80022ca:	3710      	adds	r7, #16
  80022cc:	46bd      	mov	sp, r7
  80022ce:	bd80      	pop	{r7, pc}
- 80022d0:	20000050 	.word	0x20000050
+ 80022d0:	20000040 	.word	0x20000040
 
 080022d4 <read_single_register>:
 
@@ -5820,7 +5820,7 @@ static uint8_t read_single_register(userbank ub, uint8_t reg)
  8002322:	3710      	adds	r7, #16
  8002324:	46bd      	mov	sp, r7
  8002326:	bd80      	pop	{r7, pc}
- 8002328:	20000050 	.word	0x20000050
+ 8002328:	20000040 	.word	0x20000040
 
 0800232c <read_multiple_register>:
 
@@ -5873,7 +5873,7 @@ static uint8_t* read_multiple_register(userbank ub, uint8_t reg, uint8_t len)
  800237e:	46bd      	mov	sp, r7
  8002380:	bd80      	pop	{r7, pc}
  8002382:	bf00      	nop
- 8002384:	20000050 	.word	0x20000050
+ 8002384:	20000040 	.word	0x20000040
  8002388:	20000028 	.word	0x20000028
 
 0800238c <write_single_register>:
@@ -5921,7 +5921,7 @@ static void write_single_register(userbank ub, uint8_t reg, uint8_t val)
  80023ca:	46bd      	mov	sp, r7
  80023cc:	bd80      	pop	{r7, pc}
  80023ce:	bf00      	nop
- 80023d0:	20000050 	.word	0x20000050
+ 80023d0:	20000040 	.word	0x20000040
 
 080023d4 <write_multiple_register>:
 
@@ -5970,7 +5970,7 @@ static void write_multiple_register(userbank ub, uint8_t reg, uint8_t* val, uint
  8002422:	46bd      	mov	sp, r7
  8002424:	bd80      	pop	{r7, pc}
  8002426:	bf00      	nop
- 8002428:	20000050 	.word	0x20000050
+ 8002428:	20000040 	.word	0x20000040
 
 0800242c <icm20948_init>:
 
@@ -6587,6 +6587,7 @@ void icm20948_accel_calibration()
 	uint8_t* temp2;
 	uint8_t* temp3;
 	uint8_t* temp4;
+	
 	int32_t accel_bias[3] = {0};
  80027de:	f107 031c 	add.w	r3, r7, #28
  80027e2:	2200      	movs	r2, #0

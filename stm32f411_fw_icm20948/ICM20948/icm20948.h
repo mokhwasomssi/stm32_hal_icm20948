@@ -97,10 +97,12 @@ void icm20948_gyro_sample_rate_divider(uint8_t divider);
 void icm20948_accel_sample_rate_divider(uint16_t divider);
 
 void icm20948_gyro_calibration();
-void icm20948_accel_calibration(); // 저녁 먹고 이거 구현
+void icm20948_accel_calibration();
 
 void icm20948_gyro_full_scale_select(gyro_full_scale full_scale);
 void icm20948_accel_full_scale_select(accel_full_scale full_scale);
+
+
 #endif	/* __ICM20948_H__ */
 
 

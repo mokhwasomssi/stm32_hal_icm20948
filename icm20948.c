@@ -9,6 +9,10 @@
 #include "icm20948.h"
 
 
+static float gyro_scale_factor;
+static float accel_scale_factor;
+
+
 static void cs_high()
 {
 	HAL_GPIO_WritePin(ICM20948_SPI_CS_PIN_PORT, ICM20948_SPI_CS_PIN_NUMBER, SET);	
@@ -139,6 +143,23 @@ void icm20948_accel_read(axises* data)
 	data->z = (int16_t)(temp[4] << 8 | temp[5]);	
 }
 
+void icm20948_gyro_read_dps(axises* data)
+{
+	icm20948_gyro_read(data);
+
+	data->x /= gyro_scale_factor;
+	data->y /= gyro_scale_factor;
+	data->z /= gyro_scale_factor;
+}
+
+void icm20948_accel_read_g(axises* data)
+{
+	icm20948_accel_read(data);
+
+	data->x /= accel_scale_factor;
+	data->y /= accel_scale_factor;
+	data->z /= accel_scale_factor;
+}
 
 /* ICM-20948 Sub Functions */
 bool icm20948_who_am_i()
@@ -348,15 +369,19 @@ void icm20948_gyro_full_scale_select(gyro_full_scale full_scale)
 	{
 		case _250dps :
 			new_val |= 0x00;
+			gyro_scale_factor = 131.0;
 			break;
 		case _500dps :
 			new_val |= 0x02;
+			gyro_scale_factor = 65.5;
 			break;
 		case _1000dps :
 			new_val |= 0x04;
+			gyro_scale_factor = 32.8;
 			break;
 		case _2000dps :
 			new_val |= 0x06;
+			gyro_scale_factor = 16.4;
 			break;
 	}
 
@@ -371,15 +396,19 @@ void icm20948_accel_full_scale_select(accel_full_scale full_scale)
 	{
 		case _2g :
 			new_val |= 0x00;
+			accel_scale_factor = 16384;
 			break;
 		case _4g :
 			new_val |= 0x02;
+			accel_scale_factor = 8192;
 			break;
 		case _8g :
 			new_val |= 0x04;
+			accel_scale_factor = 4096;
 			break;
 		case _16g :
 			new_val |= 0x06;
+			accel_scale_factor = 2048;
 			break;
 	}
 

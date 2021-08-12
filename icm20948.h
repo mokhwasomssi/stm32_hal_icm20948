@@ -59,17 +59,20 @@ typedef enum
 
 typedef struct
 {
-	int16_t x;
-	int16_t y;
-	int16_t z;
+	float x;
+	float y;
+	float z;
 } axises;
 
 
 /* ICM-20948 Main Functions */
 void icm20948_init();
 
-void icm20948_gyro_read(axises* data);
-void icm20948_accel_read(axises* data);
+void icm20948_gyro_read(axises* data);	// 16bits ADC value
+void icm20948_accel_read(axises* data);	// 16bits ADC value
+
+void icm20948_gyro_read_dps(axises* data);
+void icm20948_accel_read_g(axises* data);
 
 
 /* ICM-20948 Sub Functions */

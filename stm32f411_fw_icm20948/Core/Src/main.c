@@ -106,8 +106,8 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	  icm20948_gyro_read(&my_gyro);
-	  icm20948_accel_read(&my_accel);
+	icm20948_gyro_read(&my_gyro);
+	icm20948_accel_read(&my_accel);
 
 
   }

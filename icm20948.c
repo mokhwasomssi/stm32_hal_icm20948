@@ -21,12 +21,12 @@ static float accel_scale_factor;
  *
  *			read_single_register(userbank ub, uint8_t reg)
  *			read_multiple_register(userbank ub, uint8_t reg, uint8_t len)
- *
  *			write_single_register(userbank ub, uint8_t reg, uint8_t val)
- *			void write_multiple_register(userbank ub, uint8_t reg, uint8_t* val, uint8_t len)
+ *			write_multiple_register(userbank ub, uint8_t reg, uint8_t* val, uint8_t len)
  *
- * 			read_single_mag_register()
- *			write_single_mag_register()
+ * 			read_single_mag_register(uint8_t reg)
+ * 			read_multiple_mag_register(uint8_t reg, uint8_t len)
+ *			write_single_mag_register(uint8_t reg, uint8_t val)
 */
 static void cs_high()
 {
@@ -68,7 +68,7 @@ static uint8_t read_single_register(userbank ub, uint8_t reg)
 static uint8_t* read_multiple_register(userbank ub, uint8_t reg, uint8_t len)
 {
 	uint8_t read_reg = READ | reg;
-	static uint8_t reg_val[MAX_READ];
+	static uint8_t reg_val[6];
 
 	select_user_bank(ub);
 
@@ -108,16 +108,22 @@ static void write_multiple_register(userbank ub, uint8_t reg, uint8_t* val, uint
 
 static uint8_t read_single_mag_register(uint8_t reg)
 {
-	uint8_t reg_val;
-
 	write_single_register(ub_3, B3_I2C_SLV0_ADDR, READ | MAG_SLAVE_ADDR);
 	write_single_register(ub_3, B3_I2C_SLV0_REG, reg);
 	write_single_register(ub_3, B3_I2C_SLV0_CTRL, 0x81);
 
 	HAL_Delay(1);
-	reg_val = read_single_register(ub_0, B0_EXT_SLV_SENS_DATA_00);
+	return read_single_register(ub_0, B0_EXT_SLV_SENS_DATA_00);
+}
 
-	return reg_val;
+static uint8_t* read_multiple_mag_register(uint8_t reg, uint8_t len)
+{	
+	write_single_register(ub_3, B3_I2C_SLV0_ADDR, READ | MAG_SLAVE_ADDR);
+	write_single_register(ub_3, B3_I2C_SLV0_REG, reg);
+	write_single_register(ub_3, B3_I2C_SLV0_CTRL, 0x80 | len);
+
+	HAL_Delay(1);
+	return read_multiple_register(ub_0, B0_EXT_SLV_SENS_DATA_00, len);
 }
 
 static void write_single_mag_register(uint8_t reg, uint8_t val)
@@ -187,28 +193,6 @@ void icm20948_accel_read_g(axises* data)
 	data->x /= accel_scale_factor;
 	data->y /= accel_scale_factor;
 	data->z /= accel_scale_factor;
-}
-
-
-/* AK09916 Main Functions */
-void ak009916_init()
-{
-	icm20948_i2c_master_reset();
-	icm20948_i2c_master_enable();
-	icm20948_i2c_master_clk_frq(7);
-
-	ak09916_soft_reset();
-	ak09916_operation_mode_setting(continuous_measurement_100hz);
-}
-
-void ak09916_mag_read(axises* data)
-{
-
-}
-
-void ak09916_mag_read_t(axises* data)
-{
-
 }
 
 
@@ -466,6 +450,52 @@ void icm20948_accel_full_scale_select(accel_full_scale full_scale)
 
 	write_single_register(ub_2, B2_ACCEL_CONFIG, new_val);
 }
+
+
+/* AK09916 Main Functions */
+void ak009916_init()
+{
+	icm20948_i2c_master_reset();
+	icm20948_i2c_master_enable();
+	icm20948_i2c_master_clk_frq(7);
+
+	ak09916_soft_reset();
+	ak09916_operation_mode_setting(continuous_measurement_100hz);
+}
+
+bool ak09916_mag_read(axises* data)
+{
+	uint8_t* temp;
+	uint8_t drdy, hofl;	// data ready, overflow
+
+	drdy = read_single_mag_register(MAG_ST1) & 0x01;
+	if(!drdy)	return false;
+
+	temp = read_multiple_mag_register(MAG_HXL, 6);
+
+	hofl = read_single_mag_register(MAG_ST2) & 0x08;
+	if(hofl)	return false;
+
+	data->x = (int16_t)(temp[1] << 8 | temp[0]);
+	data->y = (int16_t)(temp[3] << 8 | temp[2]);
+	data->z = (int16_t)(temp[5] << 8 | temp[4]);
+
+	return true;
+}
+
+bool ak09916_mag_read_uT(axises* data)
+{
+	axises temp;
+
+	bool new_data = ak09916_mag_read(&temp);
+	if(!new_data)	return false;
+
+	data->x = (float)(temp.x * 0.15);
+	data->y = (float)(temp.y * 0.15);
+	data->z = (float)(temp.z * 0.15);
+
+	return true;
+}	
 
 
 /* AK09916 Sub Functions */

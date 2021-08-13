@@ -28,8 +28,6 @@
 #define READ							0x80
 #define WRITE							0x00
 
-#define MAX_READ						6
-
 
 /* Typedefs */
 typedef enum
@@ -74,22 +72,6 @@ typedef enum
 } operation_mode;
 
 
-/* Static Functions */
-// static void cs_high();
-// static void cs_low();
-
-// static void select_user_bank(userbank ub);
-
-// static uint8_t read_single_register(userbank ub, uint8_t reg);
-// static uint8_t* read_multiple_register(userbank ub, uint8_t reg, uint8_t len);
-
-// static void write_single_register(userbank ub, uint8_t reg, uint8_t val);
-// static void write_multiple_register(userbank ub, uint8_t reg, uint8_t* val, uint8_t len);
-
-// static uint8_t read_single_mag_register(uint8_t reg);
-// static void write_single_mag_register(uint8_t reg, uint8_t val);
-
-
 /* ICM-20948 Main Functions */
 void icm20948_init();
 
@@ -102,11 +84,14 @@ void icm20948_accel_read_g(axises* data);
 
 /* ICM-20948 Sub Functions */
 bool icm20948_who_am_i();
+
 void icm20948_device_reset();
+
 void icm20948_wakeup();
 void icm20948_sleep();
 
 void icm20948_spi_slave_enable();
+
 void icm20948_i2c_master_reset();
 void icm20948_i2c_master_enable();
 void icm20948_i2c_master_clk_frq(uint8_t config); // 0 - 15
@@ -131,12 +116,13 @@ void icm20948_accel_full_scale_select(accel_full_scale full_scale);
 /* AK09916 Main Functions */
 void ak009916_init();
 
-void ak09916_mag_read(axises* data);
-void ak09916_mag_read_t(axises* data);
+bool ak09916_mag_read(axises* data); // 16bits ADC value
+bool ak09916_mag_read_uT(axises* data);
 
 
 /* AK09916 Sub Functions */
 bool ak09916_who_am_i();
+
 void ak09916_soft_reset();
 void ak09916_operation_mode_setting(operation_mode mode);
 

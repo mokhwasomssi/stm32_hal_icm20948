@@ -48,7 +48,11 @@
 /* USER CODE BEGIN PV */
 axises my_gyro;
 axises my_accel;
+axises my_mag;
+axises my_mag2;
 
+uint8_t mag_data[6];
+uint8_t* temp2;
 uint8_t status;
 /* USER CODE END PV */
 
@@ -108,9 +112,10 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-
 	  icm20948_gyro_read(&my_gyro);
 	  icm20948_accel_read(&my_accel);
+	  ak09916_mag_read(&my_mag);
+	  ak09916_mag_read_uT(&my_mag2);
 
 
   }

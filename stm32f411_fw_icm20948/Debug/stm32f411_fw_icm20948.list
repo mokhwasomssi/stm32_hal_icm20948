@@ -39,11 +39,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  17 .debug_line   00008232  00000000  00000000  0003f009  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    00081a55  00000000  00000000  0004723b  2**0
+ 18 .debug_str    00081a62  00000000  00000000  0004723b  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000053  00000000  00000000  000c8c90  2**0
+ 19 .comment      00000053  00000000  00000000  000c8c9d  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00001d10  00000000  00000000  000c8ce4  2**2
+ 20 .debug_frame  00001d10  00000000  00000000  000c8cf0  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -6244,9 +6244,9 @@ static HAL_StatusTypeDef SPI_EndRxTxTransaction(SPI_HandleTypeDef *hspi, uint32_
  80028f0:	165e9f81 	.word	0x165e9f81
 
 080028f4 <cs_high>:
- * 			read_single_mag_register(uint8_t reg)
- * 			read_multiple_mag_register(uint8_t reg, uint8_t len)
- *			write_single_mag_register(uint8_t reg, uint8_t val)
+ * 			write_single_ak09916_reg(uint8_t reg, uint8_t val)
+ * 
+ * 			read_multiple_ak09916_reg(uint8_t reg, uint8_t len)
 */
 static void cs_high()
 {
@@ -6290,7 +6290,6 @@ static void select_user_bank(userbank ub)
  800292a:	4603      	mov	r3, r0
  800292c:	71fb      	strb	r3, [r7, #7]
 	uint8_t write_reg[2];
-
 	write_reg[0] = WRITE | REG_BANK_SEL;
  800292e:	237f      	movs	r3, #127	; 0x7f
  8002930:	733b      	strb	r3, [r7, #12]
@@ -6315,9 +6314,9 @@ static void select_user_bank(userbank ub)
  8002952:	bd80      	pop	{r7, pc}
  8002954:	20000078 	.word	0x20000078
 
-08002958 <read_single_register>:
+08002958 <read_single_icm20948_reg>:
 
-static uint8_t read_single_register(userbank ub, uint8_t reg)
+static uint8_t read_single_icm20948_reg(userbank ub, uint8_t reg)
 {
  8002958:	b580      	push	{r7, lr}
  800295a:	b084      	sub	sp, #16
@@ -6333,7 +6332,6 @@ static uint8_t read_single_register(userbank ub, uint8_t reg)
  800296e:	b2db      	uxtb	r3, r3
  8002970:	73fb      	strb	r3, [r7, #15]
 	uint8_t reg_val;
-
 	select_user_bank(ub);
  8002972:	79fb      	ldrb	r3, [r7, #7]
  8002974:	4618      	mov	r0, r3
@@ -6345,13 +6343,13 @@ static uint8_t read_single_register(userbank ub, uint8_t reg)
  800297e:	f107 010f 	add.w	r1, r7, #15
  8002982:	f44f 737a 	mov.w	r3, #1000	; 0x3e8
  8002986:	2201      	movs	r2, #1
- 8002988:	4808      	ldr	r0, [pc, #32]	; (80029ac <read_single_register+0x54>)
+ 8002988:	4808      	ldr	r0, [pc, #32]	; (80029ac <read_single_icm20948_reg+0x54>)
  800298a:	f7ff fa94 	bl	8001eb6 <HAL_SPI_Transmit>
 	HAL_SPI_Receive(ICM20948_SPI, &reg_val, 1, 1000);
  800298e:	f107 010e 	add.w	r1, r7, #14
  8002992:	f44f 737a 	mov.w	r3, #1000	; 0x3e8
  8002996:	2201      	movs	r2, #1
- 8002998:	4804      	ldr	r0, [pc, #16]	; (80029ac <read_single_register+0x54>)
+ 8002998:	4804      	ldr	r0, [pc, #16]	; (80029ac <read_single_icm20948_reg+0x54>)
  800299a:	f7ff fbc8 	bl	800212e <HAL_SPI_Receive>
 	cs_high();
  800299e:	f7ff ffa9 	bl	80028f4 <cs_high>
@@ -6365,9 +6363,9 @@ static uint8_t read_single_register(userbank ub, uint8_t reg)
  80029aa:	bd80      	pop	{r7, pc}
  80029ac:	20000078 	.word	0x20000078
 
-080029b0 <read_multiple_register>:
+080029b0 <read_multiple_icm20948_reg>:
 
-static uint8_t* read_multiple_register(userbank ub, uint8_t reg, uint8_t len)
+static uint8_t* read_multiple_icm20948_reg(userbank ub, uint8_t reg, uint8_t len)
 {
  80029b0:	b580      	push	{r7, lr}
  80029b2:	b084      	sub	sp, #16
@@ -6384,7 +6382,6 @@ static uint8_t* read_multiple_register(userbank ub, uint8_t reg, uint8_t len)
  80029c8:	b2db      	uxtb	r3, r3
  80029ca:	73fb      	strb	r3, [r7, #15]
 	static uint8_t reg_val[6];
-
 	select_user_bank(ub);
  80029cc:	79fb      	ldrb	r3, [r7, #7]
  80029ce:	4618      	mov	r0, r3
@@ -6396,20 +6393,20 @@ static uint8_t* read_multiple_register(userbank ub, uint8_t reg, uint8_t len)
  80029d8:	f107 010f 	add.w	r1, r7, #15
  80029dc:	f44f 737a 	mov.w	r3, #1000	; 0x3e8
  80029e0:	2201      	movs	r2, #1
- 80029e2:	4809      	ldr	r0, [pc, #36]	; (8002a08 <read_multiple_register+0x58>)
+ 80029e2:	4809      	ldr	r0, [pc, #36]	; (8002a08 <read_multiple_icm20948_reg+0x58>)
  80029e4:	f7ff fa67 	bl	8001eb6 <HAL_SPI_Transmit>
 	HAL_SPI_Receive(ICM20948_SPI, reg_val, len, 1000);
  80029e8:	797b      	ldrb	r3, [r7, #5]
  80029ea:	b29a      	uxth	r2, r3
  80029ec:	f44f 737a 	mov.w	r3, #1000	; 0x3e8
- 80029f0:	4906      	ldr	r1, [pc, #24]	; (8002a0c <read_multiple_register+0x5c>)
- 80029f2:	4805      	ldr	r0, [pc, #20]	; (8002a08 <read_multiple_register+0x58>)
+ 80029f0:	4906      	ldr	r1, [pc, #24]	; (8002a0c <read_multiple_icm20948_reg+0x5c>)
+ 80029f2:	4805      	ldr	r0, [pc, #20]	; (8002a08 <read_multiple_icm20948_reg+0x58>)
  80029f4:	f7ff fb9b 	bl	800212e <HAL_SPI_Receive>
 	cs_high();
  80029f8:	f7ff ff7c 	bl	80028f4 <cs_high>
 
 	return reg_val;
- 80029fc:	4b03      	ldr	r3, [pc, #12]	; (8002a0c <read_multiple_register+0x5c>)
+ 80029fc:	4b03      	ldr	r3, [pc, #12]	; (8002a0c <read_multiple_icm20948_reg+0x5c>)
 }
  80029fe:	4618      	mov	r0, r3
  8002a00:	3710      	adds	r7, #16
@@ -6419,9 +6416,9 @@ static uint8_t* read_multiple_register(userbank ub, uint8_t reg, uint8_t len)
  8002a08:	20000078 	.word	0x20000078
  8002a0c:	20000030 	.word	0x20000030
 
-08002a10 <write_single_register>:
+08002a10 <write_single_icm20948_reg>:
 
-static void write_single_register(userbank ub, uint8_t reg, uint8_t val)
+static void write_single_icm20948_reg(userbank ub, uint8_t reg, uint8_t val)
 {
  8002a10:	b580      	push	{r7, lr}
  8002a12:	b084      	sub	sp, #16
@@ -6433,7 +6430,6 @@ static void write_single_register(userbank ub, uint8_t reg, uint8_t val)
  8002a1e:	4613      	mov	r3, r2
  8002a20:	717b      	strb	r3, [r7, #5]
 	uint8_t write_reg[2];
-
 	write_reg[0] = WRITE | reg;
  8002a22:	79bb      	ldrb	r3, [r7, #6]
  8002a24:	733b      	strb	r3, [r7, #12]
@@ -6452,7 +6448,7 @@ static void write_single_register(userbank ub, uint8_t reg, uint8_t val)
  8002a36:	f107 010c 	add.w	r1, r7, #12
  8002a3a:	f44f 737a 	mov.w	r3, #1000	; 0x3e8
  8002a3e:	2202      	movs	r2, #2
- 8002a40:	4804      	ldr	r0, [pc, #16]	; (8002a54 <write_single_register+0x44>)
+ 8002a40:	4804      	ldr	r0, [pc, #16]	; (8002a54 <write_single_icm20948_reg+0x44>)
  8002a42:	f7ff fa38 	bl	8001eb6 <HAL_SPI_Transmit>
 	cs_high();
  8002a46:	f7ff ff55 	bl	80028f4 <cs_high>
@@ -6464,9 +6460,9 @@ static void write_single_register(userbank ub, uint8_t reg, uint8_t val)
  8002a52:	bf00      	nop
  8002a54:	20000078 	.word	0x20000078
 
-08002a58 <write_multiple_register>:
+08002a58 <write_multiple_icm20948_reg>:
 
-static void write_multiple_register(userbank ub, uint8_t reg, uint8_t* val, uint8_t len)
+static void write_multiple_icm20948_reg(userbank ub, uint8_t reg, uint8_t* val, uint8_t len)
 {
  8002a58:	b580      	push	{r7, lr}
  8002a5a:	b084      	sub	sp, #16
@@ -6482,7 +6478,6 @@ static void write_multiple_register(userbank ub, uint8_t reg, uint8_t* val, uint
 	uint8_t write_reg = WRITE | reg;
  8002a6e:	79bb      	ldrb	r3, [r7, #6]
  8002a70:	73fb      	strb	r3, [r7, #15]
-
 	select_user_bank(ub);
  8002a72:	79fb      	ldrb	r3, [r7, #7]
  8002a74:	4618      	mov	r0, r3
@@ -6494,14 +6489,14 @@ static void write_multiple_register(userbank ub, uint8_t reg, uint8_t* val, uint
  8002a7e:	f107 010f 	add.w	r1, r7, #15
  8002a82:	f44f 737a 	mov.w	r3, #1000	; 0x3e8
  8002a86:	2201      	movs	r2, #1
- 8002a88:	4808      	ldr	r0, [pc, #32]	; (8002aac <write_multiple_register+0x54>)
+ 8002a88:	4808      	ldr	r0, [pc, #32]	; (8002aac <write_multiple_icm20948_reg+0x54>)
  8002a8a:	f7ff fa14 	bl	8001eb6 <HAL_SPI_Transmit>
 	HAL_SPI_Transmit(ICM20948_SPI, val, len, 1000);
  8002a8e:	797b      	ldrb	r3, [r7, #5]
  8002a90:	b29a      	uxth	r2, r3
  8002a92:	f44f 737a 	mov.w	r3, #1000	; 0x3e8
  8002a96:	6839      	ldr	r1, [r7, #0]
- 8002a98:	4804      	ldr	r0, [pc, #16]	; (8002aac <write_multiple_register+0x54>)
+ 8002a98:	4804      	ldr	r0, [pc, #16]	; (8002aac <write_multiple_icm20948_reg+0x54>)
  8002a9a:	f7ff fa0c 	bl	8001eb6 <HAL_SPI_Transmit>
 	cs_high();
  8002a9e:	f7ff ff29 	bl	80028f4 <cs_high>
@@ -6513,39 +6508,39 @@ static void write_multiple_register(userbank ub, uint8_t reg, uint8_t* val, uint
  8002aaa:	bf00      	nop
  8002aac:	20000078 	.word	0x20000078
 
-08002ab0 <read_single_mag_register>:
+08002ab0 <read_single_ak09916_reg>:
 
-static uint8_t read_single_mag_register(uint8_t reg)
+static uint8_t read_single_ak09916_reg(uint8_t reg)
 {
  8002ab0:	b580      	push	{r7, lr}
  8002ab2:	b082      	sub	sp, #8
  8002ab4:	af00      	add	r7, sp, #0
  8002ab6:	4603      	mov	r3, r0
  8002ab8:	71fb      	strb	r3, [r7, #7]
-	write_single_register(ub_3, B3_I2C_SLV0_ADDR, READ | MAG_SLAVE_ADDR);
+	write_single_icm20948_reg(ub_3, B3_I2C_SLV0_ADDR, READ | MAG_SLAVE_ADDR);
  8002aba:	228c      	movs	r2, #140	; 0x8c
  8002abc:	2103      	movs	r1, #3
  8002abe:	2030      	movs	r0, #48	; 0x30
- 8002ac0:	f7ff ffa6 	bl	8002a10 <write_single_register>
-	write_single_register(ub_3, B3_I2C_SLV0_REG, reg);
+ 8002ac0:	f7ff ffa6 	bl	8002a10 <write_single_icm20948_reg>
+	write_single_icm20948_reg(ub_3, B3_I2C_SLV0_REG, reg);
  8002ac4:	79fb      	ldrb	r3, [r7, #7]
  8002ac6:	461a      	mov	r2, r3
  8002ac8:	2104      	movs	r1, #4
  8002aca:	2030      	movs	r0, #48	; 0x30
- 8002acc:	f7ff ffa0 	bl	8002a10 <write_single_register>
-	write_single_register(ub_3, B3_I2C_SLV0_CTRL, 0x81);
+ 8002acc:	f7ff ffa0 	bl	8002a10 <write_single_icm20948_reg>
+	write_single_icm20948_reg(ub_3, B3_I2C_SLV0_CTRL, 0x81);
  8002ad0:	2281      	movs	r2, #129	; 0x81
  8002ad2:	2105      	movs	r1, #5
  8002ad4:	2030      	movs	r0, #48	; 0x30
- 8002ad6:	f7ff ff9b 	bl	8002a10 <write_single_register>
+ 8002ad6:	f7ff ff9b 	bl	8002a10 <write_single_icm20948_reg>
 
 	HAL_Delay(1);
  8002ada:	2001      	movs	r0, #1
  8002adc:	f7fe faa6 	bl	800102c <HAL_Delay>
-	return read_single_register(ub_0, B0_EXT_SLV_SENS_DATA_00);
+	return read_single_icm20948_reg(ub_0, B0_EXT_SLV_SENS_DATA_00);
  8002ae0:	213b      	movs	r1, #59	; 0x3b
  8002ae2:	2000      	movs	r0, #0
- 8002ae4:	f7ff ff38 	bl	8002958 <read_single_register>
+ 8002ae4:	f7ff ff38 	bl	8002958 <read_single_icm20948_reg>
  8002ae8:	4603      	mov	r3, r0
 }
  8002aea:	4618      	mov	r0, r3
@@ -6553,9 +6548,9 @@ static uint8_t read_single_mag_register(uint8_t reg)
  8002aee:	46bd      	mov	sp, r7
  8002af0:	bd80      	pop	{r7, pc}
 
-08002af2 <read_multiple_mag_register>:
+08002af2 <read_multiple_ak09916_reg>:
 
-static uint8_t* read_multiple_mag_register(uint8_t reg, uint8_t len)
+static uint8_t* read_multiple_ak09916_reg(uint8_t reg, uint8_t len)
 {	
  8002af2:	b580      	push	{r7, lr}
  8002af4:	b082      	sub	sp, #8
@@ -6565,35 +6560,35 @@ static uint8_t* read_multiple_mag_register(uint8_t reg, uint8_t len)
  8002afc:	71fb      	strb	r3, [r7, #7]
  8002afe:	4613      	mov	r3, r2
  8002b00:	71bb      	strb	r3, [r7, #6]
-	write_single_register(ub_3, B3_I2C_SLV0_ADDR, READ | MAG_SLAVE_ADDR);
+	write_single_icm20948_reg(ub_3, B3_I2C_SLV0_ADDR, READ | MAG_SLAVE_ADDR);
  8002b02:	228c      	movs	r2, #140	; 0x8c
  8002b04:	2103      	movs	r1, #3
  8002b06:	2030      	movs	r0, #48	; 0x30
- 8002b08:	f7ff ff82 	bl	8002a10 <write_single_register>
-	write_single_register(ub_3, B3_I2C_SLV0_REG, reg);
+ 8002b08:	f7ff ff82 	bl	8002a10 <write_single_icm20948_reg>
+	write_single_icm20948_reg(ub_3, B3_I2C_SLV0_REG, reg);
  8002b0c:	79fb      	ldrb	r3, [r7, #7]
  8002b0e:	461a      	mov	r2, r3
  8002b10:	2104      	movs	r1, #4
  8002b12:	2030      	movs	r0, #48	; 0x30
- 8002b14:	f7ff ff7c 	bl	8002a10 <write_single_register>
-	write_single_register(ub_3, B3_I2C_SLV0_CTRL, 0x80 | len);
+ 8002b14:	f7ff ff7c 	bl	8002a10 <write_single_icm20948_reg>
+	write_single_icm20948_reg(ub_3, B3_I2C_SLV0_CTRL, 0x80 | len);
  8002b18:	79bb      	ldrb	r3, [r7, #6]
  8002b1a:	f063 037f 	orn	r3, r3, #127	; 0x7f
  8002b1e:	b2db      	uxtb	r3, r3
  8002b20:	461a      	mov	r2, r3
  8002b22:	2105      	movs	r1, #5
  8002b24:	2030      	movs	r0, #48	; 0x30
- 8002b26:	f7ff ff73 	bl	8002a10 <write_single_register>
+ 8002b26:	f7ff ff73 	bl	8002a10 <write_single_icm20948_reg>
 
 	HAL_Delay(1);
  8002b2a:	2001      	movs	r0, #1
  8002b2c:	f7fe fa7e 	bl	800102c <HAL_Delay>
-	return read_multiple_register(ub_0, B0_EXT_SLV_SENS_DATA_00, len);
+	return read_multiple_icm20948_reg(ub_0, B0_EXT_SLV_SENS_DATA_00, len);
  8002b30:	79bb      	ldrb	r3, [r7, #6]
  8002b32:	461a      	mov	r2, r3
  8002b34:	213b      	movs	r1, #59	; 0x3b
  8002b36:	2000      	movs	r0, #0
- 8002b38:	f7ff ff3a 	bl	80029b0 <read_multiple_register>
+ 8002b38:	f7ff ff3a 	bl	80029b0 <read_multiple_icm20948_reg>
  8002b3c:	4603      	mov	r3, r0
 }
  8002b3e:	4618      	mov	r0, r3
@@ -6601,9 +6596,9 @@ static uint8_t* read_multiple_mag_register(uint8_t reg, uint8_t len)
  8002b42:	46bd      	mov	sp, r7
  8002b44:	bd80      	pop	{r7, pc}
 
-08002b46 <write_single_mag_register>:
+08002b46 <write_single_ak09916_reg>:
 
-static void write_single_mag_register(uint8_t reg, uint8_t val)
+static void write_single_ak09916_reg(uint8_t reg, uint8_t val)
 {
  8002b46:	b580      	push	{r7, lr}
  8002b48:	b082      	sub	sp, #8
@@ -6613,28 +6608,28 @@ static void write_single_mag_register(uint8_t reg, uint8_t val)
  8002b50:	71fb      	strb	r3, [r7, #7]
  8002b52:	4613      	mov	r3, r2
  8002b54:	71bb      	strb	r3, [r7, #6]
-	write_single_register(ub_3, B3_I2C_SLV0_ADDR, WRITE | MAG_SLAVE_ADDR);
+	write_single_icm20948_reg(ub_3, B3_I2C_SLV0_ADDR, WRITE | MAG_SLAVE_ADDR);
  8002b56:	220c      	movs	r2, #12
  8002b58:	2103      	movs	r1, #3
  8002b5a:	2030      	movs	r0, #48	; 0x30
- 8002b5c:	f7ff ff58 	bl	8002a10 <write_single_register>
-	write_single_register(ub_3, B3_I2C_SLV0_REG, reg);
+ 8002b5c:	f7ff ff58 	bl	8002a10 <write_single_icm20948_reg>
+	write_single_icm20948_reg(ub_3, B3_I2C_SLV0_REG, reg);
  8002b60:	79fb      	ldrb	r3, [r7, #7]
  8002b62:	461a      	mov	r2, r3
  8002b64:	2104      	movs	r1, #4
  8002b66:	2030      	movs	r0, #48	; 0x30
- 8002b68:	f7ff ff52 	bl	8002a10 <write_single_register>
-	write_single_register(ub_3, B3_I2C_SLV0_DO, val);
+ 8002b68:	f7ff ff52 	bl	8002a10 <write_single_icm20948_reg>
+	write_single_icm20948_reg(ub_3, B3_I2C_SLV0_DO, val);
  8002b6c:	79bb      	ldrb	r3, [r7, #6]
  8002b6e:	461a      	mov	r2, r3
  8002b70:	2106      	movs	r1, #6
  8002b72:	2030      	movs	r0, #48	; 0x30
- 8002b74:	f7ff ff4c 	bl	8002a10 <write_single_register>
-	write_single_register(ub_3, B3_I2C_SLV0_CTRL, 0x81);
+ 8002b74:	f7ff ff4c 	bl	8002a10 <write_single_icm20948_reg>
+	write_single_icm20948_reg(ub_3, B3_I2C_SLV0_CTRL, 0x81);
  8002b78:	2281      	movs	r2, #129	; 0x81
  8002b7a:	2105      	movs	r1, #5
  8002b7c:	2030      	movs	r0, #48	; 0x30
- 8002b7e:	f7ff ff47 	bl	8002a10 <write_single_register>
+ 8002b7e:	f7ff ff47 	bl	8002a10 <write_single_icm20948_reg>
 }
  8002b82:	bf00      	nop
  8002b84:	3708      	adds	r7, #8
@@ -6700,11 +6695,11 @@ void icm20948_gyro_read(axises* data)
  8002bd6:	b084      	sub	sp, #16
  8002bd8:	af00      	add	r7, sp, #0
  8002bda:	6078      	str	r0, [r7, #4]
-	uint8_t* temp = read_multiple_register(ub_0, B0_GYRO_XOUT_H, 6);
+	uint8_t* temp = read_multiple_icm20948_reg(ub_0, B0_GYRO_XOUT_H, 6);
  8002bdc:	2206      	movs	r2, #6
  8002bde:	2133      	movs	r1, #51	; 0x33
  8002be0:	2000      	movs	r0, #0
- 8002be2:	f7ff fee5 	bl	80029b0 <read_multiple_register>
+ 8002be2:	f7ff fee5 	bl	80029b0 <read_multiple_icm20948_reg>
  8002be6:	60f8      	str	r0, [r7, #12]
 
 	data->x = (int16_t)(temp[0] << 8 | temp[1]);
@@ -6768,11 +6763,11 @@ void icm20948_accel_read(axises* data)
  8002c5c:	b084      	sub	sp, #16
  8002c5e:	af00      	add	r7, sp, #0
  8002c60:	6078      	str	r0, [r7, #4]
-	uint8_t* temp = read_multiple_register(ub_0, B0_ACCEL_XOUT_H, 6);
+	uint8_t* temp = read_multiple_icm20948_reg(ub_0, B0_ACCEL_XOUT_H, 6);
  8002c62:	2206      	movs	r2, #6
  8002c64:	212d      	movs	r1, #45	; 0x2d
  8002c66:	2000      	movs	r0, #0
- 8002c68:	f7ff fea2 	bl	80029b0 <read_multiple_register>
+ 8002c68:	f7ff fea2 	bl	80029b0 <read_multiple_icm20948_reg>
  8002c6c:	60f8      	str	r0, [r7, #12]
 
 	data->x = (int16_t)(temp[0] << 8 | temp[1]);
@@ -6837,11 +6832,11 @@ void icm20948_device_reset()
 {
  8002ce0:	b580      	push	{r7, lr}
  8002ce2:	af00      	add	r7, sp, #0
-	write_single_register(ub_0, B0_PWR_MGMT_1, 0x80 | 0x41);
+	write_single_icm20948_reg(ub_0, B0_PWR_MGMT_1, 0x80 | 0x41);
  8002ce4:	22c1      	movs	r2, #193	; 0xc1
  8002ce6:	2106      	movs	r1, #6
  8002ce8:	2000      	movs	r0, #0
- 8002cea:	f7ff fe91 	bl	8002a10 <write_single_register>
+ 8002cea:	f7ff fe91 	bl	8002a10 <write_single_icm20948_reg>
 	HAL_Delay(100);
  8002cee:	2064      	movs	r0, #100	; 0x64
  8002cf0:	f7fe f99c 	bl	800102c <HAL_Delay>
@@ -6856,10 +6851,10 @@ void icm20948_wakeup()
  8002cf8:	b580      	push	{r7, lr}
  8002cfa:	b082      	sub	sp, #8
  8002cfc:	af00      	add	r7, sp, #0
-	uint8_t new_val = read_single_register(ub_0, B0_PWR_MGMT_1);
+	uint8_t new_val = read_single_icm20948_reg(ub_0, B0_PWR_MGMT_1);
  8002cfe:	2106      	movs	r1, #6
  8002d00:	2000      	movs	r0, #0
- 8002d02:	f7ff fe29 	bl	8002958 <read_single_register>
+ 8002d02:	f7ff fe29 	bl	8002958 <read_single_icm20948_reg>
  8002d06:	4603      	mov	r3, r0
  8002d08:	71fb      	strb	r3, [r7, #7]
 	new_val &= 0xBF;
@@ -6867,12 +6862,12 @@ void icm20948_wakeup()
  8002d0c:	f023 0340 	bic.w	r3, r3, #64	; 0x40
  8002d10:	71fb      	strb	r3, [r7, #7]
 
-	write_single_register(ub_0, B0_PWR_MGMT_1, new_val);
+	write_single_icm20948_reg(ub_0, B0_PWR_MGMT_1, new_val);
  8002d12:	79fb      	ldrb	r3, [r7, #7]
  8002d14:	461a      	mov	r2, r3
  8002d16:	2106      	movs	r1, #6
  8002d18:	2000      	movs	r0, #0
- 8002d1a:	f7ff fe79 	bl	8002a10 <write_single_register>
+ 8002d1a:	f7ff fe79 	bl	8002a10 <write_single_icm20948_reg>
 	HAL_Delay(100);
  8002d1e:	2064      	movs	r0, #100	; 0x64
  8002d20:	f7fe f984 	bl	800102c <HAL_Delay>
@@ -6883,7 +6878,7 @@ void icm20948_wakeup()
  8002d2a:	bd80      	pop	{r7, pc}
 
 08002d2c <icm20948_spi_slave_enable>:
-	write_single_register(ub_0, B0_PWR_MGMT_1, new_val);
+	write_single_icm20948_reg(ub_0, B0_PWR_MGMT_1, new_val);
 	HAL_Delay(100);
 }
 
@@ -6892,10 +6887,10 @@ void icm20948_spi_slave_enable()
  8002d2c:	b580      	push	{r7, lr}
  8002d2e:	b082      	sub	sp, #8
  8002d30:	af00      	add	r7, sp, #0
-	uint8_t new_val = read_single_register(ub_0, B0_USER_CTRL);
+	uint8_t new_val = read_single_icm20948_reg(ub_0, B0_USER_CTRL);
  8002d32:	2103      	movs	r1, #3
  8002d34:	2000      	movs	r0, #0
- 8002d36:	f7ff fe0f 	bl	8002958 <read_single_register>
+ 8002d36:	f7ff fe0f 	bl	8002958 <read_single_icm20948_reg>
  8002d3a:	4603      	mov	r3, r0
  8002d3c:	71fb      	strb	r3, [r7, #7]
 	new_val |= 0x10;
@@ -6903,12 +6898,12 @@ void icm20948_spi_slave_enable()
  8002d40:	f043 0310 	orr.w	r3, r3, #16
  8002d44:	71fb      	strb	r3, [r7, #7]
 
-	write_single_register(ub_0, B0_USER_CTRL, new_val);
+	write_single_icm20948_reg(ub_0, B0_USER_CTRL, new_val);
  8002d46:	79fb      	ldrb	r3, [r7, #7]
  8002d48:	461a      	mov	r2, r3
  8002d4a:	2103      	movs	r1, #3
  8002d4c:	2000      	movs	r0, #0
- 8002d4e:	f7ff fe5f 	bl	8002a10 <write_single_register>
+ 8002d4e:	f7ff fe5f 	bl	8002a10 <write_single_icm20948_reg>
 }
  8002d52:	bf00      	nop
  8002d54:	3708      	adds	r7, #8
@@ -6922,10 +6917,10 @@ void icm20948_i2c_master_reset()
  8002d5a:	b580      	push	{r7, lr}
  8002d5c:	b082      	sub	sp, #8
  8002d5e:	af00      	add	r7, sp, #0
-	uint8_t new_val = read_single_register(ub_0, B0_USER_CTRL);
+	uint8_t new_val = read_single_icm20948_reg(ub_0, B0_USER_CTRL);
  8002d60:	2103      	movs	r1, #3
  8002d62:	2000      	movs	r0, #0
- 8002d64:	f7ff fdf8 	bl	8002958 <read_single_register>
+ 8002d64:	f7ff fdf8 	bl	8002958 <read_single_icm20948_reg>
  8002d68:	4603      	mov	r3, r0
  8002d6a:	71fb      	strb	r3, [r7, #7]
 	new_val |= 0x02;
@@ -6933,12 +6928,12 @@ void icm20948_i2c_master_reset()
  8002d6e:	f043 0302 	orr.w	r3, r3, #2
  8002d72:	71fb      	strb	r3, [r7, #7]
 
-	write_single_register(ub_0, B0_USER_CTRL, new_val);
+	write_single_icm20948_reg(ub_0, B0_USER_CTRL, new_val);
  8002d74:	79fb      	ldrb	r3, [r7, #7]
  8002d76:	461a      	mov	r2, r3
  8002d78:	2103      	movs	r1, #3
  8002d7a:	2000      	movs	r0, #0
- 8002d7c:	f7ff fe48 	bl	8002a10 <write_single_register>
+ 8002d7c:	f7ff fe48 	bl	8002a10 <write_single_icm20948_reg>
 }
  8002d80:	bf00      	nop
  8002d82:	3708      	adds	r7, #8
@@ -6952,10 +6947,10 @@ void icm20948_i2c_master_enable()
  8002d88:	b580      	push	{r7, lr}
  8002d8a:	b082      	sub	sp, #8
  8002d8c:	af00      	add	r7, sp, #0
-	uint8_t new_val = read_single_register(ub_0, B0_USER_CTRL);
+	uint8_t new_val = read_single_icm20948_reg(ub_0, B0_USER_CTRL);
  8002d8e:	2103      	movs	r1, #3
  8002d90:	2000      	movs	r0, #0
- 8002d92:	f7ff fde1 	bl	8002958 <read_single_register>
+ 8002d92:	f7ff fde1 	bl	8002958 <read_single_icm20948_reg>
  8002d96:	4603      	mov	r3, r0
  8002d98:	71fb      	strb	r3, [r7, #7]
 	new_val |= 0x20;
@@ -6963,12 +6958,12 @@ void icm20948_i2c_master_enable()
  8002d9c:	f043 0320 	orr.w	r3, r3, #32
  8002da0:	71fb      	strb	r3, [r7, #7]
 
-	write_single_register(ub_0, B0_USER_CTRL, new_val);
+	write_single_icm20948_reg(ub_0, B0_USER_CTRL, new_val);
  8002da2:	79fb      	ldrb	r3, [r7, #7]
  8002da4:	461a      	mov	r2, r3
  8002da6:	2103      	movs	r1, #3
  8002da8:	2000      	movs	r0, #0
- 8002daa:	f7ff fe31 	bl	8002a10 <write_single_register>
+ 8002daa:	f7ff fe31 	bl	8002a10 <write_single_icm20948_reg>
 	HAL_Delay(100);
  8002dae:	2064      	movs	r0, #100	; 0x64
  8002db0:	f7fe f93c 	bl	800102c <HAL_Delay>
@@ -6987,10 +6982,10 @@ void icm20948_i2c_master_clk_frq(uint8_t config)
  8002dc0:	af00      	add	r7, sp, #0
  8002dc2:	4603      	mov	r3, r0
  8002dc4:	71fb      	strb	r3, [r7, #7]
-	uint8_t new_val = read_single_register(ub_3, B3_I2C_MST_CTRL);
+	uint8_t new_val = read_single_icm20948_reg(ub_3, B3_I2C_MST_CTRL);
  8002dc6:	2101      	movs	r1, #1
  8002dc8:	2030      	movs	r0, #48	; 0x30
- 8002dca:	f7ff fdc5 	bl	8002958 <read_single_register>
+ 8002dca:	f7ff fdc5 	bl	8002958 <read_single_icm20948_reg>
  8002dce:	4603      	mov	r3, r0
  8002dd0:	73fb      	strb	r3, [r7, #15]
 	new_val |= config;
@@ -6999,12 +6994,12 @@ void icm20948_i2c_master_clk_frq(uint8_t config)
  8002dd6:	4313      	orrs	r3, r2
  8002dd8:	73fb      	strb	r3, [r7, #15]
 
-	write_single_register(ub_3, B3_I2C_MST_CTRL, new_val);	
+	write_single_icm20948_reg(ub_3, B3_I2C_MST_CTRL, new_val);	
  8002dda:	7bfb      	ldrb	r3, [r7, #15]
  8002ddc:	461a      	mov	r2, r3
  8002dde:	2101      	movs	r1, #1
  8002de0:	2030      	movs	r0, #48	; 0x30
- 8002de2:	f7ff fe15 	bl	8002a10 <write_single_register>
+ 8002de2:	f7ff fe15 	bl	8002a10 <write_single_icm20948_reg>
 }
  8002de6:	bf00      	nop
  8002de8:	3710      	adds	r7, #16
@@ -7020,10 +7015,10 @@ void icm20948_clock_source(uint8_t source)
  8002df2:	af00      	add	r7, sp, #0
  8002df4:	4603      	mov	r3, r0
  8002df6:	71fb      	strb	r3, [r7, #7]
-	uint8_t new_val = read_single_register(ub_0, B0_PWR_MGMT_1);
+	uint8_t new_val = read_single_icm20948_reg(ub_0, B0_PWR_MGMT_1);
  8002df8:	2106      	movs	r1, #6
  8002dfa:	2000      	movs	r0, #0
- 8002dfc:	f7ff fdac 	bl	8002958 <read_single_register>
+ 8002dfc:	f7ff fdac 	bl	8002958 <read_single_icm20948_reg>
  8002e00:	4603      	mov	r3, r0
  8002e02:	73fb      	strb	r3, [r7, #15]
 	new_val |= source;
@@ -7032,12 +7027,12 @@ void icm20948_clock_source(uint8_t source)
  8002e08:	4313      	orrs	r3, r2
  8002e0a:	73fb      	strb	r3, [r7, #15]
 
-	write_single_register(ub_0, B0_PWR_MGMT_1, new_val);
+	write_single_icm20948_reg(ub_0, B0_PWR_MGMT_1, new_val);
  8002e0c:	7bfb      	ldrb	r3, [r7, #15]
  8002e0e:	461a      	mov	r2, r3
  8002e10:	2106      	movs	r1, #6
  8002e12:	2000      	movs	r0, #0
- 8002e14:	f7ff fdfc 	bl	8002a10 <write_single_register>
+ 8002e14:	f7ff fdfc 	bl	8002a10 <write_single_icm20948_reg>
 }
  8002e18:	bf00      	nop
  8002e1a:	3710      	adds	r7, #16
@@ -7050,11 +7045,11 @@ void icm20948_odr_align_enable()
 {
  8002e20:	b580      	push	{r7, lr}
  8002e22:	af00      	add	r7, sp, #0
-	write_single_register(ub_2, B2_ODR_ALIGN_EN, 0x01);
+	write_single_icm20948_reg(ub_2, B2_ODR_ALIGN_EN, 0x01);
  8002e24:	2201      	movs	r2, #1
  8002e26:	2109      	movs	r1, #9
  8002e28:	2020      	movs	r0, #32
- 8002e2a:	f7ff fdf1 	bl	8002a10 <write_single_register>
+ 8002e2a:	f7ff fdf1 	bl	8002a10 <write_single_icm20948_reg>
 }
  8002e2e:	bf00      	nop
  8002e30:	bd80      	pop	{r7, pc}
@@ -7068,10 +7063,10 @@ void icm20948_gyro_low_pass_filter(uint8_t config)
  8002e36:	af00      	add	r7, sp, #0
  8002e38:	4603      	mov	r3, r0
  8002e3a:	71fb      	strb	r3, [r7, #7]
-	uint8_t new_val = read_single_register(ub_2, B2_GYRO_CONFIG_1);
+	uint8_t new_val = read_single_icm20948_reg(ub_2, B2_GYRO_CONFIG_1);
  8002e3c:	2101      	movs	r1, #1
  8002e3e:	2020      	movs	r0, #32
- 8002e40:	f7ff fd8a 	bl	8002958 <read_single_register>
+ 8002e40:	f7ff fd8a 	bl	8002958 <read_single_icm20948_reg>
  8002e44:	4603      	mov	r3, r0
  8002e46:	73fb      	strb	r3, [r7, #15]
 	new_val |= config << 3;
@@ -7083,12 +7078,12 @@ void icm20948_gyro_low_pass_filter(uint8_t config)
  8002e54:	b25b      	sxtb	r3, r3
  8002e56:	73fb      	strb	r3, [r7, #15]
 
-	write_single_register(ub_2, B2_GYRO_CONFIG_1, new_val);
+	write_single_icm20948_reg(ub_2, B2_GYRO_CONFIG_1, new_val);
  8002e58:	7bfb      	ldrb	r3, [r7, #15]
  8002e5a:	461a      	mov	r2, r3
  8002e5c:	2101      	movs	r1, #1
  8002e5e:	2020      	movs	r0, #32
- 8002e60:	f7ff fdd6 	bl	8002a10 <write_single_register>
+ 8002e60:	f7ff fdd6 	bl	8002a10 <write_single_icm20948_reg>
 }
  8002e64:	bf00      	nop
  8002e66:	3710      	adds	r7, #16
@@ -7104,10 +7099,10 @@ void icm20948_accel_low_pass_filter(uint8_t config)
  8002e70:	af00      	add	r7, sp, #0
  8002e72:	4603      	mov	r3, r0
  8002e74:	71fb      	strb	r3, [r7, #7]
-	uint8_t new_val = read_single_register(ub_2, B2_ACCEL_CONFIG);
+	uint8_t new_val = read_single_icm20948_reg(ub_2, B2_ACCEL_CONFIG);
  8002e76:	2114      	movs	r1, #20
  8002e78:	2020      	movs	r0, #32
- 8002e7a:	f7ff fd6d 	bl	8002958 <read_single_register>
+ 8002e7a:	f7ff fd6d 	bl	8002958 <read_single_icm20948_reg>
  8002e7e:	4603      	mov	r3, r0
  8002e80:	73fb      	strb	r3, [r7, #15]
 	new_val |= config << 3;
@@ -7119,12 +7114,12 @@ void icm20948_accel_low_pass_filter(uint8_t config)
  8002e8e:	b25b      	sxtb	r3, r3
  8002e90:	73fb      	strb	r3, [r7, #15]
 
-	write_single_register(ub_2, B2_GYRO_CONFIG_1, new_val);
+	write_single_icm20948_reg(ub_2, B2_GYRO_CONFIG_1, new_val);
  8002e92:	7bfb      	ldrb	r3, [r7, #15]
  8002e94:	461a      	mov	r2, r3
  8002e96:	2101      	movs	r1, #1
  8002e98:	2020      	movs	r0, #32
- 8002e9a:	f7ff fdb9 	bl	8002a10 <write_single_register>
+ 8002e9a:	f7ff fdb9 	bl	8002a10 <write_single_icm20948_reg>
 }
  8002e9e:	bf00      	nop
  8002ea0:	3710      	adds	r7, #16
@@ -7140,12 +7135,12 @@ void icm20948_gyro_sample_rate_divider(uint8_t divider)
  8002eaa:	af00      	add	r7, sp, #0
  8002eac:	4603      	mov	r3, r0
  8002eae:	71fb      	strb	r3, [r7, #7]
-	write_single_register(ub_2, B2_GYRO_SMPLRT_DIV, divider);
+	write_single_icm20948_reg(ub_2, B2_GYRO_SMPLRT_DIV, divider);
  8002eb0:	79fb      	ldrb	r3, [r7, #7]
  8002eb2:	461a      	mov	r2, r3
  8002eb4:	2100      	movs	r1, #0
  8002eb6:	2020      	movs	r0, #32
- 8002eb8:	f7ff fdaa 	bl	8002a10 <write_single_register>
+ 8002eb8:	f7ff fdaa 	bl	8002a10 <write_single_icm20948_reg>
 }
  8002ebc:	bf00      	nop
  8002ebe:	3708      	adds	r7, #8
@@ -7172,18 +7167,18 @@ void icm20948_accel_sample_rate_divider(uint16_t divider)
  8002eda:	f003 030f 	and.w	r3, r3, #15
  8002ede:	73bb      	strb	r3, [r7, #14]
 
-	write_single_register(ub_2, B2_ACCEL_SMPLRT_DIV_1, divider_1);
+	write_single_icm20948_reg(ub_2, B2_ACCEL_SMPLRT_DIV_1, divider_1);
  8002ee0:	7bfb      	ldrb	r3, [r7, #15]
  8002ee2:	461a      	mov	r2, r3
  8002ee4:	2110      	movs	r1, #16
  8002ee6:	2020      	movs	r0, #32
- 8002ee8:	f7ff fd92 	bl	8002a10 <write_single_register>
-	write_single_register(ub_2, B2_ACCEL_SMPLRT_DIV_2, divider_2);
+ 8002ee8:	f7ff fd92 	bl	8002a10 <write_single_icm20948_reg>
+	write_single_icm20948_reg(ub_2, B2_ACCEL_SMPLRT_DIV_2, divider_2);
  8002eec:	7bbb      	ldrb	r3, [r7, #14]
  8002eee:	461a      	mov	r2, r3
  8002ef0:	2111      	movs	r1, #17
  8002ef2:	2020      	movs	r0, #32
- 8002ef4:	f7ff fd8c 	bl	8002a10 <write_single_register>
+ 8002ef4:	f7ff fd8c 	bl	8002a10 <write_single_icm20948_reg>
 }
  8002ef8:	bf00      	nop
  8002efa:	3710      	adds	r7, #16
@@ -7342,12 +7337,12 @@ void icm20948_gyro_calibration()
  800301c:	b2db      	uxtb	r3, r3
  800301e:	727b      	strb	r3, [r7, #9]
 	
-	write_multiple_register(ub_2, B2_XG_OFFS_USRH, gyro_offset, 6);
+	write_multiple_icm20948_reg(ub_2, B2_XG_OFFS_USRH, gyro_offset, 6);
  8003020:	1d3a      	adds	r2, r7, #4
  8003022:	2306      	movs	r3, #6
  8003024:	2103      	movs	r1, #3
  8003026:	2020      	movs	r0, #32
- 8003028:	f7ff fd16 	bl	8002a58 <write_multiple_register>
+ 8003028:	f7ff fd16 	bl	8002a58 <write_multiple_icm20948_reg>
 }
  800302c:	bf00      	nop
  800302e:	3728      	adds	r7, #40	; 0x28
@@ -7465,11 +7460,11 @@ void icm20948_accel_calibration()
  800310a:	0c12      	lsrs	r2, r2, #16
  800310c:	701a      	strb	r2, [r3, #0]
 
-	temp2 = read_multiple_register(ub_1, B1_XA_OFFS_H, 2);
+	temp2 = read_multiple_icm20948_reg(ub_1, B1_XA_OFFS_H, 2);
  800310e:	2202      	movs	r2, #2
  8003110:	2114      	movs	r1, #20
  8003112:	2010      	movs	r0, #16
- 8003114:	f7ff fc4c 	bl	80029b0 <read_multiple_register>
+ 8003114:	f7ff fc4c 	bl	80029b0 <read_multiple_icm20948_reg>
  8003118:	63b8      	str	r0, [r7, #56]	; 0x38
 	accel_bias_reg[0] = (int32_t)(temp2[0] << 8 | temp2[1]);
  800311a:	6bbb      	ldr	r3, [r7, #56]	; 0x38
@@ -7488,11 +7483,11 @@ void icm20948_accel_calibration()
  8003134:	b2db      	uxtb	r3, r3
  8003136:	703b      	strb	r3, [r7, #0]
 
-	temp3 = read_multiple_register(ub_1, B1_YA_OFFS_H, 2);
+	temp3 = read_multiple_icm20948_reg(ub_1, B1_YA_OFFS_H, 2);
  8003138:	2202      	movs	r2, #2
  800313a:	2117      	movs	r1, #23
  800313c:	2010      	movs	r0, #16
- 800313e:	f7ff fc37 	bl	80029b0 <read_multiple_register>
+ 800313e:	f7ff fc37 	bl	80029b0 <read_multiple_icm20948_reg>
  8003142:	6378      	str	r0, [r7, #52]	; 0x34
 	accel_bias_reg[1] = (int32_t)(temp3[0] << 8 | temp3[1]);
  8003144:	6b7b      	ldr	r3, [r7, #52]	; 0x34
@@ -7511,11 +7506,11 @@ void icm20948_accel_calibration()
  800315e:	b2db      	uxtb	r3, r3
  8003160:	707b      	strb	r3, [r7, #1]
 
-	temp4 = read_multiple_register(ub_1, B1_ZA_OFFS_H, 2);
+	temp4 = read_multiple_icm20948_reg(ub_1, B1_ZA_OFFS_H, 2);
  8003162:	2202      	movs	r2, #2
  8003164:	211a      	movs	r1, #26
  8003166:	2010      	movs	r0, #16
- 8003168:	f7ff fc22 	bl	80029b0 <read_multiple_register>
+ 8003168:	f7ff fc22 	bl	80029b0 <read_multiple_icm20948_reg>
  800316c:	6338      	str	r0, [r7, #48]	; 0x30
 	accel_bias_reg[2] = (int32_t)(temp4[0] << 8 | temp4[1]);
  800316e:	6b3b      	ldr	r3, [r7, #48]	; 0x30
@@ -7619,26 +7614,26 @@ void icm20948_accel_calibration()
  8003218:	b2db      	uxtb	r3, r3
  800321a:	727b      	strb	r3, [r7, #9]
 	
-	write_multiple_register(ub_1, B1_XA_OFFS_H, &accel_offset[0], 2);
+	write_multiple_icm20948_reg(ub_1, B1_XA_OFFS_H, &accel_offset[0], 2);
  800321c:	1d3a      	adds	r2, r7, #4
  800321e:	2302      	movs	r3, #2
  8003220:	2114      	movs	r1, #20
  8003222:	2010      	movs	r0, #16
- 8003224:	f7ff fc18 	bl	8002a58 <write_multiple_register>
-	write_multiple_register(ub_1, B1_YA_OFFS_H, &accel_offset[2], 2);
+ 8003224:	f7ff fc18 	bl	8002a58 <write_multiple_icm20948_reg>
+	write_multiple_icm20948_reg(ub_1, B1_YA_OFFS_H, &accel_offset[2], 2);
  8003228:	1d3b      	adds	r3, r7, #4
  800322a:	1c9a      	adds	r2, r3, #2
  800322c:	2302      	movs	r3, #2
  800322e:	2117      	movs	r1, #23
  8003230:	2010      	movs	r0, #16
- 8003232:	f7ff fc11 	bl	8002a58 <write_multiple_register>
-	write_multiple_register(ub_1, B1_ZA_OFFS_H, &accel_offset[4], 2);
+ 8003232:	f7ff fc11 	bl	8002a58 <write_multiple_icm20948_reg>
+	write_multiple_icm20948_reg(ub_1, B1_ZA_OFFS_H, &accel_offset[4], 2);
  8003236:	1d3b      	adds	r3, r7, #4
  8003238:	1d1a      	adds	r2, r3, #4
  800323a:	2302      	movs	r3, #2
  800323c:	211a      	movs	r1, #26
  800323e:	2010      	movs	r0, #16
- 8003240:	f7ff fc0a 	bl	8002a58 <write_multiple_register>
+ 8003240:	f7ff fc0a 	bl	8002a58 <write_multiple_icm20948_reg>
 }
  8003244:	bf00      	nop
  8003246:	3740      	adds	r7, #64	; 0x40
@@ -7656,10 +7651,10 @@ void icm20948_gyro_full_scale_select(gyro_full_scale full_scale)
  8003258:	af00      	add	r7, sp, #0
  800325a:	4603      	mov	r3, r0
  800325c:	71fb      	strb	r3, [r7, #7]
-	uint8_t new_val = read_single_register(ub_2, B2_GYRO_CONFIG_1);
+	uint8_t new_val = read_single_icm20948_reg(ub_2, B2_GYRO_CONFIG_1);
  800325e:	2101      	movs	r1, #1
  8003260:	2020      	movs	r0, #32
- 8003262:	f7ff fb79 	bl	8002958 <read_single_register>
+ 8003262:	f7ff fb79 	bl	8002958 <read_single_icm20948_reg>
  8003266:	4603      	mov	r3, r0
  8003268:	73fb      	strb	r3, [r7, #15]
 	
@@ -7718,12 +7713,12 @@ void icm20948_gyro_full_scale_select(gyro_full_scale full_scale)
  80032be:	bf00      	nop
 	}
 
-	write_single_register(ub_2, B2_GYRO_CONFIG_1, new_val);
+	write_single_icm20948_reg(ub_2, B2_GYRO_CONFIG_1, new_val);
  80032c0:	7bfb      	ldrb	r3, [r7, #15]
  80032c2:	461a      	mov	r2, r3
  80032c4:	2101      	movs	r1, #1
  80032c6:	2020      	movs	r0, #32
- 80032c8:	f7ff fba2 	bl	8002a10 <write_single_register>
+ 80032c8:	f7ff fba2 	bl	8002a10 <write_single_icm20948_reg>
 }
  80032cc:	bf00      	nop
  80032ce:	3710      	adds	r7, #16
@@ -7744,10 +7739,10 @@ void icm20948_accel_full_scale_select(accel_full_scale full_scale)
  80032ec:	af00      	add	r7, sp, #0
  80032ee:	4603      	mov	r3, r0
  80032f0:	71fb      	strb	r3, [r7, #7]
-	uint8_t new_val = read_single_register(ub_2, B2_ACCEL_CONFIG);
+	uint8_t new_val = read_single_icm20948_reg(ub_2, B2_ACCEL_CONFIG);
  80032f2:	2114      	movs	r1, #20
  80032f4:	2020      	movs	r0, #32
- 80032f6:	f7ff fb2f 	bl	8002958 <read_single_register>
+ 80032f6:	f7ff fb2f 	bl	8002958 <read_single_icm20948_reg>
  80032fa:	4603      	mov	r3, r0
  80032fc:	73fb      	strb	r3, [r7, #15]
 	
@@ -7806,12 +7801,12 @@ void icm20948_accel_full_scale_select(accel_full_scale full_scale)
  800335a:	bf00      	nop
 	}
 
-	write_single_register(ub_2, B2_ACCEL_CONFIG, new_val);
+	write_single_icm20948_reg(ub_2, B2_ACCEL_CONFIG, new_val);
  800335c:	7bfb      	ldrb	r3, [r7, #15]
  800335e:	461a      	mov	r2, r3
  8003360:	2114      	movs	r1, #20
  8003362:	2020      	movs	r0, #32
- 8003364:	f7ff fb54 	bl	8002a10 <write_single_register>
+ 8003364:	f7ff fb54 	bl	8002a10 <write_single_icm20948_reg>
 }
  8003368:	bf00      	nop
  800336a:	3710      	adds	r7, #16
@@ -7855,9 +7850,9 @@ bool ak09916_mag_read(axises* data)
 	uint8_t* temp;
 	uint8_t drdy, hofl;	// data ready, overflow
 
-	drdy = read_single_mag_register(MAG_ST1) & 0x01;
+	drdy = read_single_ak09916_reg(MAG_ST1) & 0x01;
  800339c:	2010      	movs	r0, #16
- 800339e:	f7ff fb87 	bl	8002ab0 <read_single_mag_register>
+ 800339e:	f7ff fb87 	bl	8002ab0 <read_single_ak09916_reg>
  80033a2:	4603      	mov	r3, r0
  80033a4:	f003 0301 	and.w	r3, r3, #1
  80033a8:	75fb      	strb	r3, [r7, #23]
@@ -7868,15 +7863,15 @@ bool ak09916_mag_read(axises* data)
  80033b0:	2300      	movs	r3, #0
  80033b2:	e046      	b.n	8003442 <ak09916_mag_read+0xae>
 
-	temp = read_multiple_mag_register(MAG_HXL, 6);
+	temp = read_multiple_ak09916_reg(MAG_HXL, 6);
  80033b4:	2106      	movs	r1, #6
  80033b6:	2011      	movs	r0, #17
- 80033b8:	f7ff fb9b 	bl	8002af2 <read_multiple_mag_register>
+ 80033b8:	f7ff fb9b 	bl	8002af2 <read_multiple_ak09916_reg>
  80033bc:	6138      	str	r0, [r7, #16]
 
-	hofl = read_single_mag_register(MAG_ST2) & 0x08;
+	hofl = read_single_ak09916_reg(MAG_ST2) & 0x08;
  80033be:	2018      	movs	r0, #24
- 80033c0:	f7ff fb76 	bl	8002ab0 <read_single_mag_register>
+ 80033c0:	f7ff fb76 	bl	8002ab0 <read_single_ak09916_reg>
  80033c4:	4603      	mov	r3, r0
  80033c6:	f003 0308 	and.w	r3, r3, #8
  80033ca:	73fb      	strb	r3, [r7, #15]
@@ -8037,10 +8032,10 @@ void ak09916_soft_reset()
 {
  80034f8:	b580      	push	{r7, lr}
  80034fa:	af00      	add	r7, sp, #0
-	write_single_mag_register(MAG_CNTL3, 0x01);
+	write_single_ak09916_reg(MAG_CNTL3, 0x01);
  80034fc:	2101      	movs	r1, #1
  80034fe:	2032      	movs	r0, #50	; 0x32
- 8003500:	f7ff fb21 	bl	8002b46 <write_single_mag_register>
+ 8003500:	f7ff fb21 	bl	8002b46 <write_single_ak09916_reg>
 	HAL_Delay(100);
  8003504:	2064      	movs	r0, #100	; 0x64
  8003506:	f7fd fd91 	bl	800102c <HAL_Delay>
@@ -8057,11 +8052,11 @@ void ak09916_operation_mode_setting(operation_mode mode)
  8003512:	af00      	add	r7, sp, #0
  8003514:	4603      	mov	r3, r0
  8003516:	71fb      	strb	r3, [r7, #7]
-	write_single_mag_register(MAG_CNTL2, mode);
+	write_single_ak09916_reg(MAG_CNTL2, mode);
  8003518:	79fb      	ldrb	r3, [r7, #7]
  800351a:	4619      	mov	r1, r3
  800351c:	2031      	movs	r0, #49	; 0x31
- 800351e:	f7ff fb12 	bl	8002b46 <write_single_mag_register>
+ 800351e:	f7ff fb12 	bl	8002b46 <write_single_ak09916_reg>
 	HAL_Delay(100);
  8003522:	2064      	movs	r0, #100	; 0x64
  8003524:	f7fd fd82 	bl	800102c <HAL_Delay>

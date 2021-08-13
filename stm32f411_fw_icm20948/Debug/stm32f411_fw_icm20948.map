@@ -2915,19 +2915,19 @@ LOAD c:/st/stm32cubeide_1.6.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
  .text.cs_low   0x000000000800290c       0x18 ICM20948/icm20948.o
  .text.select_user_bank
                 0x0000000008002924       0x34 ICM20948/icm20948.o
- .text.read_single_register
+ .text.read_single_icm20948_reg
                 0x0000000008002958       0x58 ICM20948/icm20948.o
- .text.read_multiple_register
+ .text.read_multiple_icm20948_reg
                 0x00000000080029b0       0x60 ICM20948/icm20948.o
- .text.write_single_register
+ .text.write_single_icm20948_reg
                 0x0000000008002a10       0x48 ICM20948/icm20948.o
- .text.write_multiple_register
+ .text.write_multiple_icm20948_reg
                 0x0000000008002a58       0x58 ICM20948/icm20948.o
- .text.read_single_mag_register
+ .text.read_single_ak09916_reg
                 0x0000000008002ab0       0x42 ICM20948/icm20948.o
- .text.read_multiple_mag_register
+ .text.read_multiple_ak09916_reg
                 0x0000000008002af2       0x54 ICM20948/icm20948.o
- .text.write_single_mag_register
+ .text.write_single_ak09916_reg
                 0x0000000008002b46       0x44 ICM20948/icm20948.o
  .text.icm20948_init
                 0x0000000008002b8a       0x4a ICM20948/icm20948.o
@@ -3357,7 +3357,7 @@ LOAD c:/st/stm32cubeide_1.6.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
  .debug_line    0x000000000000582f     0x1c04 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.o
  .debug_line    0x0000000000007433      0xdff ICM20948/icm20948.o
 
-.debug_str      0x0000000000000000    0x81a55
+.debug_str      0x0000000000000000    0x81a62
  .debug_str     0x0000000000000000    0x7eada Core/Src/gpio.o
                                       0x7ed5d (size before relaxing)
  .debug_str     0x000000000007eada     0x11fe Core/Src/main.o
@@ -3382,8 +3382,8 @@ LOAD c:/st/stm32cubeide_1.6.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
                                       0x7f0dd (size before relaxing)
  .debug_str     0x0000000000080f51      0x584 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.o
                                       0x7f56d (size before relaxing)
- .debug_str     0x00000000000814d5      0x580 ICM20948/icm20948.o
-                                      0x80232 (size before relaxing)
+ .debug_str     0x00000000000814d5      0x58d ICM20948/icm20948.o
+                                      0x8023f (size before relaxing)
 
 .comment        0x0000000000000000       0x53
  .comment       0x0000000000000000       0x53 Core/Src/gpio.o

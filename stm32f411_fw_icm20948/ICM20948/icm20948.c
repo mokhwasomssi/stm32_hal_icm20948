@@ -13,6 +13,21 @@ static float gyro_scale_factor;
 static float accel_scale_factor;
 
 
+/* Static Functions List */
+/** @note	cs_high()
+ *			cs_low()
+ *
+ *			select_user_bank(userbank ub)
+ *
+ *			read_single_register(userbank ub, uint8_t reg)
+ *			read_multiple_register(userbank ub, uint8_t reg, uint8_t len)
+ *
+ *			write_single_register(userbank ub, uint8_t reg, uint8_t val)
+ *			void write_multiple_register(userbank ub, uint8_t reg, uint8_t* val, uint8_t len)
+ *
+ * 			read_single_mag_register()
+ *			write_single_mag_register()
+*/
 static void cs_high()
 {
 	HAL_GPIO_WritePin(ICM20948_SPI_CS_PIN_PORT, ICM20948_SPI_CS_PIN_NUMBER, SET);	
@@ -77,8 +92,6 @@ static void write_single_register(userbank ub, uint8_t reg, uint8_t val)
 	cs_low();
 	HAL_SPI_Transmit(ICM20948_SPI, write_reg, 2, 1000);
 	cs_high();
-
-	//HAL_Delay(1);
 }
 
 static void write_multiple_register(userbank ub, uint8_t reg, uint8_t* val, uint8_t len)
@@ -93,6 +106,28 @@ static void write_multiple_register(userbank ub, uint8_t reg, uint8_t* val, uint
 	cs_high();
 }
 
+static uint8_t read_single_mag_register(uint8_t reg)
+{
+	uint8_t reg_val;
+
+	write_single_register(ub_3, B3_I2C_SLV0_ADDR, READ | MAG_SLAVE_ADDR);
+	write_single_register(ub_3, B3_I2C_SLV0_REG, reg);
+	write_single_register(ub_3, B3_I2C_SLV0_CTRL, 0x81);
+
+	HAL_Delay(1);
+	reg_val = read_single_register(ub_0, B0_EXT_SLV_SENS_DATA_00);
+
+	return reg_val;
+}
+
+static void write_single_mag_register(uint8_t reg, uint8_t val)
+{
+	write_single_register(ub_3, B3_I2C_SLV0_ADDR, WRITE | MAG_SLAVE_ADDR);
+	write_single_register(ub_3, B3_I2C_SLV0_REG, reg);
+	write_single_register(ub_3, B3_I2C_SLV0_DO, val);
+	write_single_register(ub_3, B3_I2C_SLV0_CTRL, 0x81);
+}
+
 
 /* ICM-20948 Main Functions */
 void icm20948_init()
@@ -105,12 +140,6 @@ void icm20948_init()
 	
 	icm20948_spi_slave_enable();
 	
-	/*
-	icm20948_i2c_master_reset();
-	icm20948_i2c_master_enable();
-	icm20948_i2c_master_clk_frq(7);
-	*/
-
 	icm20948_gyro_low_pass_filter(0);
 	icm20948_accel_low_pass_filter(0);
 
@@ -122,7 +151,6 @@ void icm20948_init()
 
 	icm20948_gyro_full_scale_select(_2000dps);
 	icm20948_accel_full_scale_select(_16g);
-
 }
 
 void icm20948_gyro_read(axises* data)
@@ -161,12 +189,35 @@ void icm20948_accel_read_g(axises* data)
 	data->z /= accel_scale_factor;
 }
 
+
+/* AK09916 Main Functions */
+void ak009916_init()
+{
+	icm20948_i2c_master_reset();
+	icm20948_i2c_master_enable();
+	icm20948_i2c_master_clk_frq(7);
+
+	ak09916_soft_reset();
+	ak09916_operation_mode_setting(continuous_measurement_100hz);
+}
+
+void ak09916_mag_read(axises* data)
+{
+
+}
+
+void ak09916_mag_read_t(axises* data)
+{
+
+}
+
+
 /* ICM-20948 Sub Functions */
 bool icm20948_who_am_i()
 {
 	uint8_t icm20948_id = read_single_register(ub_0, B0_WHO_AM_I);
 
-	if(icm20948_id == 0xEA)
+	if(icm20948_id == ICM20948_ID)
 		return true;
 	else
 		return false;
@@ -218,6 +269,7 @@ void icm20948_i2c_master_enable()
 	new_val |= 0x20;
 
 	write_single_register(ub_0, B0_USER_CTRL, new_val);
+	HAL_Delay(100);
 }
 
 void icm20948_i2c_master_clk_frq(uint8_t config)
@@ -413,4 +465,28 @@ void icm20948_accel_full_scale_select(accel_full_scale full_scale)
 	}
 
 	write_single_register(ub_2, B2_ACCEL_CONFIG, new_val);
+}
+
+
+/* AK09916 Sub Functions */
+bool ak09916_who_am_i()
+{
+	uint8_t ak09916_id = read_single_mag_register(MAG_WIA2);
+
+	if(ak09916_id == AK09916_ID)
+		return true;
+	else
+		return false;
+}
+
+void ak09916_soft_reset()
+{
+	write_single_mag_register(MAG_CNTL3, 0x01);
+	HAL_Delay(100);
+}
+
+void ak09916_operation_mode_setting(operation_mode mode)
+{
+	write_single_mag_register(MAG_CNTL2, mode);
+	HAL_Delay(100);
 }

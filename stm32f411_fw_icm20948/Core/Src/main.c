@@ -49,6 +49,7 @@
 axises my_gyro;
 axises my_accel;
 
+uint8_t status;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -94,6 +95,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   icm20948_init();
+  ak009916_init();
 
 
   /* USER CODE END 2 */
@@ -106,8 +108,9 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	icm20948_gyro_read(&my_gyro);
-	icm20948_accel_read(&my_accel);
+
+	  icm20948_gyro_read(&my_gyro);
+	  icm20948_accel_read(&my_accel);
 
 
   }

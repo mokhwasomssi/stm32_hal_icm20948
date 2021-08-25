@@ -46,14 +46,11 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+
 axises my_gyro;
 axises my_accel;
 axises my_mag;
-axises my_mag2;
 
-uint8_t mag_data[6];
-uint8_t* temp2;
-uint8_t status;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -99,7 +96,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   icm20948_init();
-  ak009916_init();
+  ak09916_init();
 
 
   /* USER CODE END 2 */
@@ -112,10 +109,9 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	  icm20948_gyro_read(&my_gyro);
-	  icm20948_accel_read(&my_accel);
-	  ak09916_mag_read(&my_mag);
-	  ak09916_mag_read_uT(&my_mag2);
+	  icm20948_gyro_read_dps(&my_gyro);
+	  icm20948_accel_read_g(&my_accel);
+	  ak09916_mag_read_uT(&my_mag);
 
 
   }

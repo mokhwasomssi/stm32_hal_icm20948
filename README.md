@@ -3,7 +3,7 @@
 ## Brief
 
 __ICM-20948 is 9-axis IMU sensor.__  
-__TAG - `ICM-20948` `SPI` `STM32 HAL`__
+__TAG - `ICM-20948` `AK09916` `SPI` `STM32 HAL`__
 
 |Axis|Not Recommended for New Designs|Recommended for New Designs|
 |:---:|:---:|:---:|

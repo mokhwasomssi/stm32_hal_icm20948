@@ -15,11 +15,8 @@
 
 
 /* User Configuration */
-
-// SPI Interface
 #define ICM20948_SPI					(&hspi1)
 
-// CS Pin
 #define ICM20948_SPI_CS_PIN_PORT		GPIOA
 #define ICM20948_SPI_CS_PIN_NUMBER		GPIO_PIN_4
 
@@ -72,20 +69,30 @@ typedef enum
 } operation_mode;
 
 
-/* ICM-20948 Main Functions */
+/* Main Functions */
+
+// sensor init function.
+// if sensor id is wrong, it is stuck in while.
 void icm20948_init();
+void ak09916_init();
 
-void icm20948_gyro_read(axises* data);	// 16bits ADC value
-void icm20948_accel_read(axises* data);	// 16bits ADC value
+// 16 bits ADC value. raw data.
+void icm20948_gyro_read(axises* data);	
+void icm20948_accel_read(axises* data);
+bool ak09916_mag_read(axises* data); 
 
-void icm20948_gyro_read_dps(axises* data);
+// Convert 16 bits ADC value to their unit.
+void icm20948_gyro_read_dps(axises* data); 
 void icm20948_accel_read_g(axises* data);
+bool ak09916_mag_read_uT(axises* data);
 
 
-/* ICM-20948 Sub Functions */
+/* Sub Functions */
 bool icm20948_who_am_i();
+bool ak09916_who_am_i();
 
 void icm20948_device_reset();
+void ak09916_soft_reset();
 
 void icm20948_wakeup();
 void icm20948_sleep();
@@ -105,26 +112,14 @@ void icm20948_accel_low_pass_filter(uint8_t config); // 0 - 7
 // Output Data Rate = 1.125kHz / (1 + divider)
 void icm20948_gyro_sample_rate_divider(uint8_t divider);
 void icm20948_accel_sample_rate_divider(uint16_t divider);
+void ak09916_operation_mode_setting(operation_mode mode);
 
+// Calibration before select full scale.
 void icm20948_gyro_calibration();
 void icm20948_accel_calibration();
 
 void icm20948_gyro_full_scale_select(gyro_full_scale full_scale);
 void icm20948_accel_full_scale_select(accel_full_scale full_scale);
-
-
-/* AK09916 Main Functions */
-void ak009916_init();
-
-bool ak09916_mag_read(axises* data); // 16bits ADC value
-bool ak09916_mag_read_uT(axises* data);
-
-
-/* AK09916 Sub Functions */
-bool ak09916_who_am_i();
-
-void ak09916_soft_reset();
-void ak09916_operation_mode_setting(operation_mode mode);
 
 
 /* ICM-20948 Registers */

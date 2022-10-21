@@ -248,7 +248,7 @@ void icm20948_accel_low_pass_filter(uint8_t config)
 	uint8_t new_val = read_single_icm20948_reg(ub_2, B2_ACCEL_CONFIG);
 	new_val |= config << 3;
 
-	write_single_icm20948_reg(ub_2, B2_GYRO_CONFIG_1, new_val);
+	write_single_icm20948_reg(ub_2, B2_ACCEL_CONFIG, new_val);
 }
 
 void icm20948_gyro_sample_rate_divider(uint8_t divider)
